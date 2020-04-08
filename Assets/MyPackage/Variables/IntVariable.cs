@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "IntVariable", menuName = "Variables/int")]
+[CreateAssetMenu(fileName = "IntVariable", menuName = "Variables/Int")]
 public class IntVariable : ScriptableObject
 {
     [SerializeField]
