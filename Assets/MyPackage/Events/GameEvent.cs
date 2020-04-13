@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "GameEvent", menuName = "GameEvent")]
+[CreateAssetMenu(fileName = "GameEvent", menuName = "Events/GameEvent(void)")]
 public class GameEvent : ScriptableObject
 {
     /// <summary>
@@ -9,13 +9,12 @@ public class GameEvent : ScriptableObject
     /// </summary>
     private readonly List<GameEventListener> eventListeners = 
         new List<GameEventListener>();
-
     
     #pragma warning disable 0414
     [SerializeField]
     [Multiline]
     private string DeveloperDescription = "";
-    #pragma warning restore
+    #pragma warning restore 0414
     
     public void Raise()
     {

@@ -1,19 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class RuntimeSet<T> : ScriptableObject
+[CreateAssetMenu(fileName= "RuntimeSet", menuName= "RuntimeSet")]
+public class RuntimeSet : ScriptableObject
 {
-    public List<T> Items = new List<T>();
-    
-    public void Add(T thing)
+    public List<RuntimeItem> Items = new List<RuntimeItem>();
+
+    public void Add(RuntimeItem thing)
     {
         if (!Items.Contains(thing))
             Items.Add(thing);
     }
 
-    public void Remove(T thing)
-        => Items.Remove(thing);
-
-    public bool Contain(T thing)
-        => Items.Contains(thing);
+    public void Remove(RuntimeItem thing)
+    {
+        if (Items.Contains(thing))
+            Items.Remove(thing);
+    }
 }

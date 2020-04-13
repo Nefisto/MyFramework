@@ -3,15 +3,15 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [Serializable]
-public class MyIntEvent : UnityEvent<int> {}
+public class MyBoolEvent : UnityEvent<bool> {}
 
-public class GameEventListenerInt : MonoBehaviour
+public class GameEventListenerBool : MonoBehaviour
 {
     [Tooltip("Event to register with.")]
-    public GameEventInt Event;
+    public GameEventBool Event;
 
     [Tooltip("Response to invoke when Event is raised.")]
-    public MyIntEvent Response;
+    public MyBoolEvent Response;
 
     private void OnEnable()
     {
@@ -23,7 +23,7 @@ public class GameEventListenerInt : MonoBehaviour
         Event.UnregisterListener(this);
     }
 
-    public void OnEventRaised(int value)
+    public void OnEventRaised(bool value)
     {
         Response.Invoke(value);
     }
