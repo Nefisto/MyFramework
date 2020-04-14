@@ -4,10 +4,9 @@
 
 | Quick reference                                              |
 | :----------------------------------------------------------- |
-| [Variables architecture](#Variables architecture: (Ryan Hipple - Unite 2017)) |
+| [Variables architecture](#variables-architecture:-(ryan-hipple---unite-2017)) |
 | [Game event architecture](#Game Event architecture: (Ryan Hipple - Unite 2017)) |
 | [Runtime sets approach](#Runtime sets: (Ryan Hipple - Unite 2017)) |
-
 
 
 ### Notes:
