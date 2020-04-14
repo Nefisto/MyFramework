@@ -2,11 +2,12 @@
 
 
 
-| Quick reference                                              |
-| :----------------------------------------------------------- |
-| [Variables architecture](#variables-architecture) |
-| [Game event architecture](#Game Event architecture: (Ryan Hipple - Unite 2017)) |
-| [Runtime sets approach](#Runtime sets: (Ryan Hipple - Unite 2017)) |
+| Quick reference                                     |
+| :-------------------------------------------------- |
+| [Variables architecture](#variables-architecture)   |
+| [Game event architecture](#game-event-architecture) |
+| [Runtime sets](#runtime-sets)                       |
+| [Reload-proof singletons](#reload-proof-singleton)  |
 
 
 ### Notes:
@@ -15,10 +16,12 @@
 
 ### Credits:
 
-* [Unite Austin 2017 - Game Architecture with Scriptable Objects (Ryan Hipple talk)](https://www.youtube.com/watch?v=raQ3iHhE_Kk&t=2713s) 
+* [Ryan Hipple - Unite 2017](https://www.youtube.com/watch?v=raQ3iHhE_Kk&t=2713s) 
+* [Richard Fine - Unite 2016](https://www.youtube.com/watch?v=6vmRwLYWNRo) 
+* [Itchy Owl](https://itchyowl.com/scriptableobjects-part-2/)
 
 ## Variables architecture
-> (Ryan Hipple - Unite 2017)
+> Ryan Hipple - Unite 2017
 #### Why use it
 
 ​	Variables **(int, vector, boolean ...)** used to create an abstraction layer between objects that share states or info
@@ -27,7 +30,7 @@
 
 ​	If u have some state that other object need to know about, use it to make this communication layer
 
-#### How its work
+#### How it work
 
 ​	This architecture are divided in 3 parts:
 
@@ -195,7 +198,9 @@
    }
    ```
 
-## [Game Event architecture: (Ryan Hipple - Unite 2017)](#My framework)
+## Game Event architecture
+
+> Ryan Hipple - Unite 2017
 
 #### What
 
@@ -209,56 +214,105 @@
 
 ​	If u can isolate an event, than u can use it. Maybe an *OnInit* that setup all things before game start or an *OnPause* that show some UI and inventory info or maybe *OnDie* that triggers things that happen when player die
 
-## [Runtime sets: (Ryan Hipple - Unite 2017)](#My framework)
+## Runtime sets
 
-#### What
+> Ryan Hipple - Unite 2017
 
-​	Instead of use singletons or other object that is dependent of scene or third other objects, use this scriptable object to control your runtime group of *things*
+#### Why use it
 
-#### How
+​	Sometimes you need to take track about where some objects are in scene or many objects are active now or get know about groups of somethings specific as: *flying enemy with name manji*, and so on. This set take care of it without singletons that will find for them, an easily can take care of specific situation as said above or situations where some object is part of multiple groups of things
 
-​	It's an abstract class:
+#### When use it
+
+​	When u need to control things in real time, lets say, amount of candies or quantity of flying enemies... then u use it. Remember that an object can be trackable by many sets without worry, if u disable it in an place, u remove from all sets. 
+
+#### How it work
+
+1. An abstract class that will represent your *group of things*
 
 ```c#
-public abstract class RuntimeSet<T> : ScriptableObject
+[CreateAssetMenu(fileName= "RuntimeSet", menuName= "RuntimeSet")]
+public class RuntimeSet : ScriptableObject
 {
-    public List<T> Items = new List<T>();
+    public List<RuntimeItem> Items = new List<RuntimeItem>();
 
-    public void Add(T thing)
+    public void Add(RuntimeItem thing)
     {
         if (!Items.Contains(thing))
             Items.Add(thing);
     }
 
-    public void Remove(T thing)
-        => Items.Remove(thing);
+    public void Remove(RuntimeItem thing)
+    {
+        if (Items.Contains(thing))
+            Items.Remove(thing);
+    }
 }
 ```
 
-You need to create an class of *things*, it will be your *ScriptableObject* (asset) part, lets create bullets:
+2. Your *monobehaviour* part that will mark a *thing* as trackable by some *set*
 
-```c#
-[CreateAssetMenu]
-public class BulletsRuntimeSet : RuntimeSet<TrackableBullet> { }
-```
+   ```c#
+   public class RuntimeItem : MonoBehaviour
+   {
+       public RuntimeSet runtimeSet;
+   
+       private void OnEnable()
+           => runtimeSet.Add(this);
+   
+       private void OnDisable()
+           => runtimeSet.Remove(this);
+   }
+   ```
 
-And this is the *Monobehaviour* (component) part that will be added to anything that you want to track as a bullet, a *Bullet* need to *register* and *unregister* when *enabled* n *disabled*, respectively, so.
+Now, any object that have *RuntimeItem* component will be tracked by respective *runtimeSet* in runtime, so if u need any info from it container,  only iterate. 
 
-```c#
-public class TrackableBullet : MonoBehaviour
-{
-    public BulletsRuntimeSet Set;
+> OBS: Who access component are responsible to get necessary component
 
-    private void OnEnable()
-        => runtimeSet.Add(this);
+## Reload-proof Singleton
 
-    private void OnDisable()
-        => runtimeSet.Remove(this);
-}
-```
+> Richard Fine - Unite 2016
+>
+> Itchy Owl
 
-Now, any object that have *TrackableBullet* component will be tracked in runtime, so if u need any info from it container,  only iterate.
+#### Why use it
 
-#### When
+​	To create *scene-independent* managers as a manager to control game assets. This approach avoid use things as *preload scene*.
 
-​	When u need to control things in real time, lets say, amount of candies or quantity of flying enemies... then u use it. Remember that an object can be trackable by many sets without worry, if u disable it in an place, u remove from all sets. 
+#### How use it
+
+ 1. It's only an generic scriptable object singleton class
+
+    ```c#
+    using System.Linq;
+    using UnityEngine;
+    
+    public abstract class ScriptableSingleton<T> : ScriptableObject 
+        where T : ScriptableObject
+    {
+        protected static T _instance;
+        public static T Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    var type = typeof(T);
+                    var instances = Resources.LoadAll<T>(string.Empty);
+                    _instance = instances.FirstOrDefault();
+                    if (_instance == null)
+                    {
+                        Debug.LogErrorFormat("[ScriptableSingleton] No instance of {0} found!", type.ToString());
+                    }
+                    else if (instances.Count() > 1)
+                    {
+                        Debug.LogErrorFormat("[ScriptableSingleton] Multiple instances of {0} found!", type.ToString());
+                    }
+                }
+                return _instance;
+            }
+        }
+    }
+    ```
+
+All you need to do is make your singleton to inherit from this class an it will be accessible by any part/scene of your game. 

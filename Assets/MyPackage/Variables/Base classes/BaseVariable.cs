@@ -13,8 +13,12 @@ public abstract class BaseVariable<T> : ScriptableObject
     [Header("Will have an default value?")]
     public bool haveDefaultValue = false;
     
+    [Header("Default/Current value")]
     [SerializeField]
     private T value;
+    
+    [Header("Debug")]
+    [SerializeField]
     private T runTimeValue;
     
     public T Value

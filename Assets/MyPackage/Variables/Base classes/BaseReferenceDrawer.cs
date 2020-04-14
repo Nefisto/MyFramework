@@ -3,6 +3,7 @@ using UnityEditor;
 
 public abstract class BaseReferenceDrawer : PropertyDrawer
 {
+
     /// <summary>
     /// Options to display in the popup to select constant or variable.
     /// </summary>

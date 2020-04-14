@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+
 
 [CreateAssetMenu(fileName = "GameEventBool", menuName = "Events/GameEvent(bool)")]
 public class GameEventBool : ScriptableObject
@@ -16,10 +18,17 @@ public class GameEventBool : ScriptableObject
     private string DeveloperDescription = "";
     #pragma warning restore 0414
 
+    [Header("Debug")]
     public bool value;
+
+    [Header("Happen every trigger")]
+    public MyBoolEvent defaultBehavior;
 
     public void Raise(bool _value)
     {
+        if (defaultBehavior != null)
+            defaultBehavior.Invoke(_value);
+
         for(int i = eventListeners.Count -1; i >= 0; i--)
             eventListeners[i].OnEventRaised(_value);
     }
@@ -35,10 +44,4 @@ public class GameEventBool : ScriptableObject
         if (eventListeners.Contains(listener))
             eventListeners.Remove(listener);
     }
-
-    // public override void Raise(int _value)
-    // {
-    //     for (int i = eventListeners.Count - 1; i >= 0; i--)
-    //         eventListeners[i].OnEventRaised(_value);
-    // }
 }
