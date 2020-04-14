@@ -17,7 +17,7 @@
 
 * [Unite Austin 2017 - Game Architecture with Scriptable Objects (Ryan Hipple talk)](https://www.youtube.com/watch?v=raQ3iHhE_Kk&t=2713s) 
 
-## [Variables architecture: (Ryan Hipple - Unite 2017)](#My framework)
+## [Variables architecture: (Ryan Hipple - Unite 2017)](#my-framework)
 
 #### Why use it
 
