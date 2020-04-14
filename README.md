@@ -4,7 +4,7 @@
 
 | Quick reference                                              |
 | :----------------------------------------------------------- |
-| [Variables architecture](#variables-architecture:-(ryan-hipple---unite-2017)) |
+| [Variables architecture](#variables-architecture) |
 | [Game event architecture](#Game Event architecture: (Ryan Hipple - Unite 2017)) |
 | [Runtime sets approach](#Runtime sets: (Ryan Hipple - Unite 2017)) |
 
@@ -17,8 +17,8 @@
 
 * [Unite Austin 2017 - Game Architecture with Scriptable Objects (Ryan Hipple talk)](https://www.youtube.com/watch?v=raQ3iHhE_Kk&t=2713s) 
 
-## [Variables architecture: (Ryan Hipple - Unite 2017)](#my-framework)
-
+## Variables architecture
+> (Ryan Hipple - Unite 2017)
 #### Why use it
 
 ​	Variables **(int, vector, boolean ...)** used to create an abstraction layer between objects that share states or info
