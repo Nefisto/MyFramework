@@ -26,7 +26,14 @@ public class Vector2IntReference
 
     public Vector2Int Value
     {
-        get => UseConstant ? ConstantValue : Variable.Value;
+        get => UseConstant ? ConstantValue : Variable.Value; 
+        set
+        {
+            if (UseConstant)
+                ConstantValue = value;
+            else
+                Variable.Value = value;
+        }
     }
 
     public int x

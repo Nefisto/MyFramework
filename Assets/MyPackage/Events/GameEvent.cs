@@ -1,24 +1,42 @@
+#pragma warning disable 0414 // Assigned but never used (DeveloperDescription)
+#pragma warning disable 0649 // Never assigned (eventListeners)
+
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [CreateAssetMenu(fileName = "GameEvent", menuName = "Events/GameEvent(void)")]
 public class GameEvent : ScriptableObject
 {
-    /// <summary>
-    /// The list of listeners that this event will notify if it is raised.
-    /// </summary>
-    private readonly List<GameEventListener> eventListeners = 
-        new List<GameEventListener>();
-    
-    #pragma warning disable 0414
     [SerializeField]
     [Multiline]
     private string DeveloperDescription = "";
-    #pragma warning restore 0414
-    
+
+    [Header("Happen every triggered time")]
+    public UnityEvent defaultBehavior;
+
+    [Space]
+
+    [Header("Registered listeners")]
+    [SerializeField]
+    private List<GameEventListener> eventListeners;// = new List<GameEventListenerInt>();
+
+    private void OnEnable()
+    {
+        eventListeners.Clear();
+    }
+
+    private void OnDisable()
+    {
+        eventListeners.Clear();
+    }
+
     public void Raise()
     {
-        for(int i = eventListeners.Count -1; i >= 0; i--)
+        if (defaultBehavior != null)
+            defaultBehavior.Invoke();
+
+        for (int i = eventListeners.Count - 1; i >= 0; i--)
             eventListeners[i].OnEventRaised();
     }
 

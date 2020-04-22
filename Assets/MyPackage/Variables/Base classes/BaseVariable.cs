@@ -33,7 +33,16 @@ public abstract class BaseVariable<T> : ScriptableObject
         }
     }
 
+    public void Reset()
+        => Value = default(T);
+        
     private void OnEnable()
+    {
+        if (haveDefaultValue)
+            runTimeValue = value;
+    }
+
+    private void OnDisable()
     {
         if (haveDefaultValue)
             runTimeValue = value;

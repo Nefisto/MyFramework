@@ -14,4 +14,7 @@ public class Vector2IntVariable : BaseVariable<Vector2Int>
         get => Value.y;
         set => this.y = value;
     }
+
+    public void ApplyChange(Vector2Int value)
+        => Value += value;
 }
