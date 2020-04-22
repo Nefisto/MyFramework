@@ -1,234 +1,291 @@
-# My framework
+# Framework
+
+> Framework para otimizar o fluxo de desenvolvimento quando se usa unity
 
 
 
-| Quick reference                                     |
-| :-------------------------------------------------- |
-| [Variables architecture](#variables-architecture)   |
-| [Game event architecture](#game-event-architecture) |
-| [Runtime sets](#runtime-sets)                       |
-| [Reload-proof singletons](#reload-proof-singleton)  |
-
+| Sumario                                               |
+| :---------------------------------------------------- |
+| [Arquitetura de variaveis](#arquitetura-de-variáveis) |
+| [Arquitetura de eventos](#arquitetura-de-eventos)     |
+| [Runtime sets](#runtime-sets)                         |
+| [Reload-proof singletons](#reload-proof-singleton)    |
 
 ### Notes:
 
-* Credits are given from the first time that I heard about this practices, examples are not the same from conferences, I've made my own changes, so... 
+* O código se difere da sua versão original a qual o credito é dado, o mesmo representa apenas o local onde eu ouvi falar sobre o conceito pela primeira vez.
+* A parte de **como funciona** expressa apenas a ideia central de como o código esta estruturado, para mais informações leia o código.
 
-### Credits:
+### Créditos:
 
-* [Ryan Hipple - Unite 2017](https://www.youtube.com/watch?v=raQ3iHhE_Kk&t=2713s) 
+* [Ryan Hipple - Unite 2017](https://www.youtube.com/watch?v=raQ3iHhE_Kk&t=2713s)
+
+  > Variáveis, runtime sets, game events
+
 * [Richard Fine - Unite 2016](https://www.youtube.com/watch?v=6vmRwLYWNRo) 
-* [Itchy Owl](https://itchyowl.com/scriptableobjects-part-2/)
 
-## Variables architecture
-> Ryan Hipple - Unite 2017
-#### Why use it
+  > Reload-proof singletons, audio events
 
-​	Variables **(int, vector, boolean ...)** used to create an abstraction layer between objects that share states or info
+---
 
-#### When use it
-
-​	If u have some state that other object need to know about, use it to make this communication layer
-
-#### How it work
-
-​	This architecture are divided in 3 parts:
-
-1. A base class that define description n values, also an getter that will chose between an original value or an runtime value, it's necessary because *Scriptable Object* don't reset values, so, any change is permanent
-
-   > OBS: if *haveDefaultValue* is true, value will represent the default value.
-
-   ```c#
-   public abstract class BaseVariable<T> : ScriptableObject
-   {
-       private string DeveloperDescription = "";
-   
-       [Header("Will have an default value?")]
-       public bool haveDefaultValue = false;
-       
-       [SerializeField]
-       private T value;
-       private T runTimeValue;
-       
-       public T Value
-       {
-           get => haveDefaultValue ? runTimeValue : value;
-           set
-           {
-               if (haveDefaultValue)
-                   runTimeValue = value;
-               else
-                   this.value = value;
-           }
-       }
-   
-       private void OnEnable()
-       {
-           if (haveDefaultValue)
-               runTimeValue = value;
-       }
-   }
-   ```
-
-2. An *reference monobehaviour* that will be attached to objects to create communication between shared variables(states) without require any kind of rigid references. Also, this is what will make the system *designer-friendly*.
-
-   > Vector2Int example
-
-   ```c#
-   using System;
-   using UnityEngine;
-   
-   [Serializable]
-   public class Vector2IntReference
-   {
-       public bool UseConstant = true;
-       public Vector2Int ConstantValue;
-       public Vector2IntVariable Variable;
-   
-       #region Constructors
-   
-       public Vector2IntReference()
-       { }
-   
-       public Vector2IntReference(Vector2Int value)
-       {
-           UseConstant = true;
-           ConstantValue = value;
-       }
-   
-       #endregion
-   
-       #region Properties
-   
-       public Vector2Int Value
-       {
-           get => UseConstant ? ConstantValue : Variable.Value;
-       }
-   
-       public int x
-       {
-           get => Value.x;
-           set
-           {
-               if (UseConstant)
-                   ConstantValue.x = value;
-               else
-                   Variable.x = value;
-           }
-       }
-   
-       public int y
-       {
-           get => Value.y;
-           set
-           {
-               if (UseConstant)
-                   ConstantValue.y = value;
-               else
-                   Variable.y = value;
-           }
-       }
-       
-       #endregion
-   
-       public static implicit operator Vector2Int(Vector2IntReference reference)
-           => reference.Value;
-   }
-   ```
-
-3. To finish, an property drawer to turn reference in editor more friendly
-
-   ```c#
-   using UnityEngine;
-   using UnityEditor;
-   
-   public abstract class BaseReferenceDrawer : PropertyDrawer
-   {
-       /// <summary>
-       /// Options to display in the popup to select constant or variable.
-       /// </summary>
-       private readonly string[] popupOptions =
-           { "Use Constant", "Use Variable" };
-   
-       /// <summary> Cached style to use to draw the popup button. </summary>
-       private GUIStyle popupStyle;
-   
-       public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-       {
-           if (popupStyle == null)
-           {
-               popupStyle = new GUIStyle(GUI.skin.GetStyle("PaneOptions"));
-               popupStyle.imagePosition = ImagePosition.ImageOnly;
-           }
-   
-           label = EditorGUI.BeginProperty(position, label, property);
-           position = EditorGUI.PrefixLabel(position, label);
-   
-           EditorGUI.BeginChangeCheck();
-   
-           // Get properties
-           SerializedProperty useConstant = property.FindPropertyRelative("UseConstant");
-           SerializedProperty constantValue = property.FindPropertyRelative("ConstantValue");
-           SerializedProperty variable = property.FindPropertyRelative("Variable");
-   
-           // Calculate rect for configuration button
-           Rect buttonRect = new Rect(position);
-           buttonRect.yMin += popupStyle.margin.top;
-           buttonRect.width = popupStyle.fixedWidth + popupStyle.margin.right;
-           position.xMin = buttonRect.xMax;
-   
-           // Store old indent level and set it to 0, the PrefixLabel takes care of it
-           int indent = EditorGUI.indentLevel;
-           EditorGUI.indentLevel = 0;
-   
-           int result = EditorGUI.Popup(buttonRect, useConstant.boolValue ? 0 : 1, popupOptions, popupStyle);
-   
-           useConstant.boolValue = result == 0;
-   
-           EditorGUI.PropertyField(position,
-               useConstant.boolValue ? constantValue : variable,
-               GUIContent.none);
-   
-           if (EditorGUI.EndChangeCheck())
-               property.serializedObject.ApplyModifiedProperties();
-   
-           EditorGUI.indentLevel = indent;
-           EditorGUI.EndProperty();
-       }
-   }
-   ```
-
-## Game Event architecture
+## Arquitetura de variáveis
 
 > Ryan Hipple - Unite 2017
 
-#### What
+#### Conceito
 
-​	An triggers that centralize behaviors between objects in a same place.
+​	Variáveis como *scriptable objects* para criar uma camada de comunicação entre os objetos que dependem desse estado compartilhado
 
-#### How
+#### Quando usar
 
-​	Any object that has an *GameEventListener* can *listen* to an call made by an *GameEvent*, so add GameEventListener to your object, set the GameEvent and add functions to say *what it will do when this game event happen*.
+​	Caso uma variável local qualquer seja necessária para o comportamento de algum outro objeto, ao invés de criar uma referencia entre os objetos em questão, torne a variável um SO e os objetos se referenciam a ele pelos assets
 
-#### When
+#### Como usar
 
-​	If u can isolate an event, than u can use it. Maybe an *OnInit* that setup all things before game start or an *OnPause* that show some UI and inventory info or maybe *OnDie* that triggers things that happen when player die
+1. Crie um novo SO do tipo de variável desejada
+2. Dentro do script que ira utilizar da variável compartilhada: `public IntReference myRef`
+3. No *inspector* selecione "*use variable*" (veja imagem mais abaixo)
+4. Insira a variável criada no passo 1
+
+#### Como funciona
+
+​	A arquitetura é dividida em 3 partes
+
+1. Uma classe base genérica
+
+```c#
+public abstract class BaseVariable<T> : ScriptableObject
+{
+    public bool haveDefaultValue = false;
+    
+    [SerializeField]
+    private T value;
+    private T runTimeValue;
+    
+    public T Value
+    {
+        get => haveDefaultValue ? runTimeValue : value;
+        set
+        {
+            if (haveDefaultValue)
+                runTimeValue = value;
+            else
+                this.value = value;
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (haveDefaultValue)
+            runTimeValue = value;
+    }
+    
+    private void OnDisable()
+    {
+        if (haveDefaultValue)
+            runTimeValue = value;
+    }
+}
+```
+
+​	E um SO para cada tipo de variável que for criada
+
+```c#
+[CreateAssetMenu(fileName = "IntVariable", menuName = "Variables/Int")]
+public class IntVariable : BaseVariable<int>
+{ }
+```
+
+2. Uma referencie que será criada nos monobehaviours que forem utilizar da variável em questão, sem criar ligações rígidas entre os interessados. Essa classe também tem como objetivo criar um sistema mais *designer-friendly* tornando possível que os estados compartilhados sejam alterados sem a necessidade de alteração no codigo, o inspetor do unity funciona como um injetor
+
+```c#
+using System;
+
+[Serializable]
+public class IntReference
+{
+    public bool UseConstant = true;
+    public int ConstantValue;
+    public IntVariable Variable;
+
+    public IntReference()
+    { }
+
+    public IntReference(int value)
+    {
+        UseConstant = true;
+        ConstantValue = value;
+    }
+
+    public int Value
+    {
+        get => UseConstant ? ConstantValue : Variable.Value; 
+        set
+        {
+            if (UseConstant)
+                ConstantValue = value;
+            else
+                Variable.Value = value;
+        }
+    }
+
+    public static implicit operator int(IntReference reference)
+        => reference.Value;
+}
+```
+
+E para melhorar a experiência, é criado um PropertyDrawer
+
+![Imgur](https://i.imgur.com/bBUb3VH.png)
+
+[to up](#framework)
+
+---
+
+## Arquitetura de eventos
+
+> Ryan Hipple - Unite 2017
+
+#### Conceito
+
+​	Destacar eventos que acontecem durante a execução, como por exemplo um pause, e criar uma camada que separa os objetos que são responsáveis por disparar o evento (triggers) e aqueles que respondem a esse evento (listeners)
+
+#### Quando usar
+
+​	Sempre que possível
+
+#### Como usar
+
+1. Crie um novo SO do tipo de evento desejado 
+
+2. Dentro do objeto que ira atuar como *trigger*, crie a variável e faça seu *invoke* no lugar desejado
+
+   ```c#
+   ...
+   public GameEvent onDeath;
+   ...
+   public void Death()
+       => onDeath.Raise()
+   ```
+
+3. Nos objetos que atuarão como *listeners*, adicione o componente *GameEventListener*
+   ![Imgur](https://i.imgur.com/YSVD9sk.png)
+
+4. Arraste o evento ao qual o objeto ira responder e insira os comportamentos a serem executados na lista de *response*
+
+> OBS: Não há garantia de execução para a resposta (até onde eu sei)
+
+#### Como funciona
+
+1. Uma classe que representa o evento e expõe maneiras de se registrar e se remover como listener do evento.
+
+   > OBS: Essa classe é recriada para cada evento tipado distinto
+
+```c#
+[CreateAssetMenu(fileName = "GameEvent", menuName = "Events/GameEvent(void)")]
+public class GameEvent : ScriptableObject
+{
+    private readonly List<GameEventListener> eventListeners = new List<GameEventListenerInt>();
+
+    public void Raise()
+    {
+        for (int i = eventListeners.Count - 1; i >= 0; i--)
+            eventListeners[i].OnEventRaised();
+    }
+
+    public void RegisterListener(GameEventListener listener)
+    {
+        if (!eventListeners.Contains(listener))
+            eventListeners.Add(listener);
+    }
+
+    public void UnregisterListener(GameEventListener listener)
+    {
+        if (eventListeners.Contains(listener))
+            eventListeners.Remove(listener);
+    }
+}
+```
+
+​	Para facilitar o trabalho de *debugar*, é escrito um editor que permite que o evento seja invocado do *inspector*
+
+![Imgur](https://i.imgur.com/KgJvQRY.png)
+
+> OBS: por razões obvias o evento só pode ser chamado em *runtime*
+
+2. Para o lado do *runtime*, há um componente de *monobehaviour* que atua como listener para um evento qualquer, do mesmo tipo, e executa os eventos quando o *trigger* é ativado
+
+   > OBS: Para eventos tipados é necessário criar uma classes serializavel que herde de *UnityEvent* 
+   >
+   > ex:  Para um evento de *int*
+   >
+   > ```c#
+   > [Serializable]
+   > public class MyIntEvent : UnityEvent<int> {}
+   > ```
+
+```c#
+public class GameEventListener : MonoBehaviour
+{
+    [Tooltip("Event to register with.")]
+    public GameEvent Event;
+
+    [Tooltip("Response to invoke when Event is raised.")]
+    public UnityEvent Response;
+
+    private void OnEnable()
+    {
+        Event.RegisterListener(this);
+    }
+
+    private void OnDisable()
+    {
+        Event.UnregisterListener(this);
+    }
+
+    public void OnEventRaised()
+    {
+        Response.Invoke();
+    }
+}
+```
+
+
+
+[to up](#framework)
+
+---
 
 ## Runtime sets
 
 > Ryan Hipple - Unite 2017
 
-#### Why use it
+#### Conceito
 
-​	Sometimes you need to take track about where some objects are in scene or many objects are active now or get know about groups of somethings specific as: *flying enemy with name manji*, and so on. This set take care of it without singletons that will find for them, an easily can take care of specific situation as said above or situations where some object is part of multiple groups of things
+​	As vezes é necessário manter um registro de quais objetos específicos existem em cena em um momento qualquer, ou talvez criar categorias para esses objetos e ter acesso a diferentes grupos em tempo de execução. Para solucionar esse problema sem usar variáveis globais de controle (AKA: Singletons, que causam dependências na comunicação)
 
-#### When use it
+#### Quando usar
 
-​	When u need to control things in real time, lets say, amount of candies or quantity of flying enemies... then u use it. Remember that an object can be trackable by many sets without worry, if u disable it in an place, u remove from all sets. 
+​	Sempre que for necessário categorizar e/ou acompanhar objetos em tempo de execução
 
-#### How it work
+#### Como usar
 
-1. An abstract class that will represent your *group of things*
+1. Crie o SO de *RuntimeSet*
+
+2. Aos objetos que farão parte desse grupo, insira o componente *Runtime Item* e adicione o grupo a qual o item pertence
+
+3. No script em que for necessário fazer referencia ao grupo, adicione ele como uma variável publica a ser injetada pelo *inspector* (O uso com LINQ é apenas um exemplo)
+
+   ```c#
+   ...
+   public RuntimeSet trackableGroup;
+   ...
+   trackableGroup.Items.Find(...);
+   ```
+
+#### Como funciona
+
+1. Uma classe abstrata que representa um grupo de "coisas"
 
 ```c#
 [CreateAssetMenu(fileName= "RuntimeSet", menuName= "RuntimeSet")]
@@ -250,38 +307,55 @@ public class RuntimeSet : ScriptableObject
 }
 ```
 
-2. Your *monobehaviour* part that will mark a *thing* as trackable by some *set*
+2. Um componente que marca um objeto como "rastreável"
 
-   ```c#
-   public class RuntimeItem : MonoBehaviour
-   {
-       public RuntimeSet runtimeSet;
-   
-       private void OnEnable()
-           => runtimeSet.Add(this);
-   
-       private void OnDisable()
-           => runtimeSet.Remove(this);
-   }
-   ```
+```c#
+public class RuntimeItem : MonoBehaviour
+{
+    public RuntimeSet runtimeSet;
 
-Now, any object that have *RuntimeItem* component will be tracked by respective *runtimeSet* in runtime, so if u need any info from it container,  only iterate. 
+    private void OnEnable()
+        => runtimeSet.Add(this);
 
-> OBS: Who access component are responsible to get necessary component
+    private void OnDisable()
+        => runtimeSet.Remove(this);
+}
+```
+
+> OBS: Quem acessar o componente é responsável por coletar as informações necessárias
+
+[to up](#framework)
+
+---
 
 ## Reload-proof Singleton
 
 > Richard Fine - Unite 2016
 >
-> Itchy Owl
 
-#### Why use it
+#### Conceito
 
-​	To create *scene-independent* managers as a manager to control game assets. This approach avoid use things as *preload scene*.
+​	Em algumas situações precisamos de objetos que existam independentemente de qual cena está em uso atualmente, para esses casos é proposto o uso de padrões singletons que existem apenas nos assets por meio de SO. Essa abordagem evita o uso de *preload-scenes*
 
-#### How use it
+#### Como usar
 
- 1. It's only an generic scriptable object singleton class
+1. Crie um script que herde de *ScriptableSingleton<T>*
+
+```c#
+[CreateAssetMenu(fileName = "SceneController", menuName = "Managers/Scene")]
+public class SceneController : ScriptableSingleton<SceneController>
+{   
+    public void ChangeScene(int sceneIndex)
+       => SceneManager.LoadScene(sceneIndex);
+}
+```
+
+2. **Crie uma pasta chamada "Resources" em qualquer parte do seu diretório e deixa o singleton ali dentro**, caso seja necessário testar diferentes "controladores", troque o controlador que está dentro da pasta
+3. A partir de qualquer ponto do código de qualquer *script*, chame o *singleton*: `SceneController.Instance.ChangeScene(0)` 
+
+#### Como funciona
+
+ 1. Uma classe genérica que procura o *singleton* dentro da pasta *resource* 
 
     ```c#
     using System.Linq;
@@ -315,4 +389,4 @@ Now, any object that have *RuntimeItem* component will be tracked by respective 
     }
     ```
 
-All you need to do is make your singleton to inherit from this class an it will be accessible by any part/scene of your game. 
+[to up](#framework)

@@ -8,18 +8,14 @@ using UnityEngine.Events;
 [CreateAssetMenu(fileName = "GameEvent", menuName = "Events/GameEvent(void)")]
 public class GameEvent : ScriptableObject
 {
+    private readonly List<GameEventListener> eventListeners = new List<GameEventListener>();
+
     [SerializeField]
     [Multiline]
     private string DeveloperDescription = "";
 
     [Header("Happen every triggered time")]
     public UnityEvent defaultBehavior;
-
-    [Space]
-
-    [Header("Registered listeners")]
-    [SerializeField]
-    private List<GameEventListener> eventListeners;// = new List<GameEventListenerInt>();
 
     private void OnEnable()
     {
