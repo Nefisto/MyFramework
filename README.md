@@ -10,6 +10,7 @@
 | [Arquitetura de eventos](#arquitetura-de-eventos)     |
 | [Runtime sets](#runtime-sets)                         |
 | [Reload-proof singletons](#reload-proof-singleton)    |
+| [Audio events](#audio-events)                         |
 
 ### Notes:
 
@@ -43,13 +44,13 @@
 #### Como usar
 
 1. Crie um novo SO do tipo de variável desejada
-2. Dentro do script que ira utilizar da variável compartilhada: `public IntReference myRef`
+2. Dentro do script crie a variável do tipo especifico: ex `public IntReference myVar`
 3. No *inspector* selecione "*use variable*" (veja imagem mais abaixo)
 4. Insira a variável criada no passo 1
 
 #### Como funciona
 
-​	A arquitetura é dividida em 3 partes
+​	A estrutura é dividida em 3 partes
 
 1. Uma classe base genérica
 
@@ -96,7 +97,7 @@ public class IntVariable : BaseVariable<int>
 { }
 ```
 
-2. Uma referencie que será criada nos monobehaviours que forem utilizar da variável em questão, sem criar ligações rígidas entre os interessados. Essa classe também tem como objetivo criar um sistema mais *designer-friendly* tornando possível que os estados compartilhados sejam alterados sem a necessidade de alteração no codigo, o inspetor do unity funciona como um injetor
+2. Uma referencia que será criada nos *monobehaviours* que forem compartilhar a variável em questão. Essa classe também tem como objetivo criar um sistema mais *designer-friendly* tornando possível que os estados compartilhados sejam alterados sem a necessidade de alteração no código, tudo pelo *inspector* que funciona como um injetor
 
 ```c#
 using System;
@@ -134,7 +135,7 @@ public class IntReference
 }
 ```
 
-E para melhorar a experiência, é criado um PropertyDrawer
+E para melhorar a experiência, é criado uma *PropertyDrawer*
 
 ![Imgur](https://i.imgur.com/bBUb3VH.png)
 
@@ -148,7 +149,7 @@ E para melhorar a experiência, é criado um PropertyDrawer
 
 #### Conceito
 
-​	Destacar eventos que acontecem durante a execução, como por exemplo um pause, e criar uma camada que separa os objetos que são responsáveis por disparar o evento (triggers) e aqueles que respondem a esse evento (listeners)
+​	Destacar eventos que acontecem durante a execução, como por exemplo um pause, e criar uma camada que separa os objetos que são responsáveis por disparar o evento (*triggers*) e aqueles que respondem a esse evento (*listeners*)
 
 #### Quando usar
 
@@ -168,18 +169,18 @@ E para melhorar a experiência, é criado um PropertyDrawer
        => onDeath.Raise()
    ```
 
-3. Nos objetos que atuarão como *listeners*, adicione o componente *GameEventListener*
+3. Nos objetos que atuarão como *listeners*, adicione o componente *GameEventListener* (do mesmo tipo do evento)
    ![Imgur](https://i.imgur.com/YSVD9sk.png)
 
 4. Arraste o evento ao qual o objeto ira responder e insira os comportamentos a serem executados na lista de *response*
 
-> OBS: Não há garantia de execução para a resposta (até onde eu sei)
+> OBS: Não há garantia de ordem de execução para a resposta (até onde eu sei)
 
 #### Como funciona
 
-1. Uma classe que representa o evento e expõe maneiras de se registrar e se remover como listener do evento.
+1. Uma classe que representa o evento e expõe maneiras de se registrar e se remover como *listener* do evento.
 
-   > OBS: Essa classe é recriada para cada evento tipado distinto
+   > OBS: Essa classe é recriada para cada evento de tipo distinto
 
 ```c#
 [CreateAssetMenu(fileName = "GameEvent", menuName = "Events/GameEvent(void)")]
@@ -207,13 +208,13 @@ public class GameEvent : ScriptableObject
 }
 ```
 
-​	Para facilitar o trabalho de *debugar*, é escrito um editor que permite que o evento seja invocado do *inspector*
+​	Para facilitar o trabalho de depuração é escrito um editor que permite que o evento seja invocado direto do *inspector*
 
 ![Imgur](https://i.imgur.com/KgJvQRY.png)
 
 > OBS: por razões obvias o evento só pode ser chamado em *runtime*
 
-2. Para o lado do *runtime*, há um componente de *monobehaviour* que atua como listener para um evento qualquer, do mesmo tipo, e executa os eventos quando o *trigger* é ativado
+2. Há um componente de *monobehaviour* que atua como listener para um evento qualquer, do mesmo tipo, e executa os eventos quando o *trigger* é ativado
 
    > OBS: Para eventos tipados é necessário criar uma classes serializavel que herde de *UnityEvent* 
    >
@@ -262,7 +263,7 @@ public class GameEventListener : MonoBehaviour
 
 #### Conceito
 
-​	As vezes é necessário manter um registro de quais objetos específicos existem em cena em um momento qualquer, ou talvez criar categorias para esses objetos e ter acesso a diferentes grupos em tempo de execução. Para solucionar esse problema sem usar variáveis globais de controle (AKA: Singletons, que causam dependências na comunicação)
+​	As vezes é necessário manter um registro de quais objetos específicos existem em cena em um momento qualquer ou talvez criar categorias para esses objetos e ter acesso a diferentes grupos em tempo de execução. Para solucionar esse tipo de problema sem usar variáveis globais de controle (AKA: Singletons, que causam dependências na comunicação) é proposto o uso de um SO que faça o papel de armazenar as referencias aos objetos guardados e que exista independentemente de cena
 
 #### Quando usar
 
@@ -282,6 +283,8 @@ public class GameEventListener : MonoBehaviour
    ...
    trackableGroup.Items.Find(...);
    ```
+
+> OBS: Quem acessar o componente é responsável por coletar as informações necessárias
 
 #### Como funciona
 
@@ -322,8 +325,6 @@ public class RuntimeItem : MonoBehaviour
 }
 ```
 
-> OBS: Quem acessar o componente é responsável por coletar as informações necessárias
-
 [to up](#framework)
 
 ---
@@ -333,9 +334,9 @@ public class RuntimeItem : MonoBehaviour
 > Richard Fine - Unite 2016
 >
 
-#### Conceito
+#### Conceito 
 
-​	Em algumas situações precisamos de objetos que existam independentemente de qual cena está em uso atualmente, para esses casos é proposto o uso de padrões singletons que existem apenas nos assets por meio de SO. Essa abordagem evita o uso de *preload-scenes*
+​	Em algumas situações precisamos de objetos que existam independentemente de qual cena está em uso atualmente, para esses casos é proposto o uso de padrões *singletons* que existem apenas nos *assets* por meio de SO. Essa abordagem evita o uso de *preload-scenes*
 
 #### Como usar
 
@@ -350,8 +351,8 @@ public class SceneController : ScriptableSingleton<SceneController>
 }
 ```
 
-2. **Crie uma pasta chamada "Resources" em qualquer parte do seu diretório e deixa o singleton ali dentro**, caso seja necessário testar diferentes "controladores", troque o controlador que está dentro da pasta
-3. A partir de qualquer ponto do código de qualquer *script*, chame o *singleton*: `SceneController.Instance.ChangeScene(0)` 
+2. **Crie uma pasta chamada "*Resources*" em qualquer parte do seu diretório e deixe o *singleton* ali dentro**. Caso seja necessário testar diferentes "controladores", troque o controlador que está dentro da pasta
+3. A partir de qualquer ponto do código de qualquer *script*, chame o *singleton* por meio de sua instancia: `SceneController.Instance.ChangeScene(0)` 
 
 #### Como funciona
 
@@ -390,3 +391,47 @@ public class SceneController : ScriptableSingleton<SceneController>
     ```
 
 [to up](#framework)
+
+---
+
+## Audio events
+
+> Richard Fine - Unite 2016
+
+#### Conceito
+
+​	Para controlar a adição de áudio no projeto e melhorar a experiência de controle, é utilizado um padrão de *delegate* para criar comportamentos distintos entre arquivos que controlam os áudios
+
+#### Quando usar
+
+​	É possível criar comportamentos distintos para grupos distintos de áudio, como por exemplo, um comportamento que randomiza um áudio dentro de uma *array* de *AudioClips* com ou sem peso, que alterna entre áudio, etc... e todos por ser injetados da mesma maneira pelo *inspector* e/ou chamados por código. Enfim, **use sempre que possível**
+
+#### Como usar
+
+1. Crie e configure um novo SO do evento de áudio desejado 
+   	(botão direito -> Áudio events)
+
+2. Na classe responsável por executar o áudio crie uma referencia para a classe base e chame seu método Play() pelo código OU **pelo *inspector* por meio de eventos**
+
+   ```c#
+   ...
+   public AudioEvent burp;
+   ...
+   ```
+
+3. Arraste o áudio criado no passo 1
+
+#### Como funciona
+
+1. Uma classe base que garante a existência do método *play* (note que é usado uma classe abstrata pois o *inspector* do *unity* não permite que interfaces sejam injetadas por ele, não de maneira nativa pelo menos)
+2. Agora é criado diferentes tipos de áudio que herdem da classe acima, implementa comportamentos distintos para cada um e permitindo que eles sejam criados por meio de SO
+3. É implementado um *custom editor* para permitir que o som seja testado a qualquer momento 
+
+![Imgur](https://i.imgur.com/IedhXx7.png)
+
+> OBS 1: A variável  de volume e *pitch* são customizados para possuir um mínimo e máximo
+>
+> OBS 2: A imagem é apenas um exemplo, cada classe vai ter seu próprio meio de aparecer no *inspector*
+
+---
+
