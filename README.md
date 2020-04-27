@@ -11,6 +11,12 @@
 | [Runtime sets](#runtime-sets)                         |
 | [Reload-proof singletons](#reload-proof-singleton)    |
 | [Audio events](#audio-events)                         |
+| <s>FlexibleUI</s>                                     |
+
+| Extra                   |
+| ----------------------- |
+| [Atributos](#atributos) |
+| <s>Editor</s>           |
 
 ### Notes:
 
@@ -433,5 +439,29 @@ public class SceneController : ScriptableSingleton<SceneController>
 >
 > OBS 2: A imagem é apenas um exemplo, cada classe vai ter seu próprio meio de aparecer no *inspector*
 
+[to up](#framework)
+
 ---
+
+## Atributos
+
+> Richard Fine - Unite 2016
+
+![Imgur](https://i.imgur.com/vYVeOHP.png)
+
+​	Permite que você escolha um mínimo e um máximo para um variável qualquer
+
+#### Como usar
+
+​	Cria uma variável do tipo (custom) FloatRange (ou IntRange), por padrão ela oscila de 0 a 1, para valores diferentes insira o atributo MaxMinRange
+
+```c#
+...
+[MaxMinRange(0, 2)]
+public FloatRange volume;
+```
+
+| Métodos     |                                                              |
+| ----------- | ------------------------------------------------------------ |
+| GetRandom() | Retorna um valor aleatório entre os especificados no atributo |
 

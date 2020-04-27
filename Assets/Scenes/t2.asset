@@ -9,15 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 946be9edcb5cdc847a53ae9f05de704e, type: 3}
-  m_Name: RandomAudioEvent
+  m_Script: {fileID: 11500000, guid: a1fd85b91f400364aaa319929f32743f, type: 3}
+  m_Name: t2
   m_EditorClassIdentifier: 
-  clips:
-  - {fileID: 0}
-  - {fileID: 0}
-  volume:
-    minValue: 1
-    maxValue: 1
-  pitch:
-    minValue: 1
-    maxValue: 1
