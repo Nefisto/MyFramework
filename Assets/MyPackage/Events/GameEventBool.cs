@@ -7,6 +7,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "GameEventBool", menuName = "Events/GameEvent(bool)")]
 public class GameEventBool : ScriptableObject
 {
+    private List<GameEventListenerBool> eventListeners = 
+        new List<GameEventListenerBool>();
+
+
     [SerializeField]
     [Multiline]
     private string DeveloperDescription = "";
@@ -16,12 +20,6 @@ public class GameEventBool : ScriptableObject
 
     [Header("Happen every trigger")]
     public MyBoolEvent defaultBehavior;
-
-    [Space]
-
-    [Header("Registered listeners")]
-    [SerializeField]
-    private List<GameEventListenerBool> eventListeners;// = new List<GameEventListenerInt>();
 
     private void OnEnable()
     {

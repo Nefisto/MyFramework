@@ -7,6 +7,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "GameEventInt", menuName = "Events/GameEvent(int)")]
 public class GameEventInt : ScriptableObject
 {
+    private List<GameEventListenerInt> eventListeners = 
+        new List<GameEventListenerInt>();
+
     [SerializeField]
     [Multiline]
     private string DeveloperDescription = "";
@@ -15,12 +18,6 @@ public class GameEventInt : ScriptableObject
 
     [Header("Happen every triggered time")]
     public MyIntEvent defaultBehavior;
-
-    [Space]
-
-    [Header("Registered listeners")]
-    [SerializeField]
-    private List<GameEventListenerInt> eventListeners;// = new List<GameEventListenerInt>();
 
     private void OnEnable()
     {

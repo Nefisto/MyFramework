@@ -8,8 +8,10 @@ using UnityEngine.Events;
 [CreateAssetMenu(fileName = "GameEvent", menuName = "Events/GameEvent(void)")]
 public class GameEvent : ScriptableObject
 {
-    private readonly List<GameEventListener> eventListeners = new List<GameEventListener>();
+    private List<GameEventListener> eventListeners = 
+        new List<GameEventListener>();   
 
+        
     [SerializeField]
     [Multiline]
     private string DeveloperDescription = "";

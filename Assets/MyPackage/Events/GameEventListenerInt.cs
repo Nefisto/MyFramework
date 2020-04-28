@@ -5,7 +5,6 @@ using UnityEngine.Events;
 [Serializable]
 public class MyIntEvent : UnityEvent<int> {}
 
-[Serializable]
 public class GameEventListenerInt : MonoBehaviour
 {
     [Tooltip("Event to register with.")]

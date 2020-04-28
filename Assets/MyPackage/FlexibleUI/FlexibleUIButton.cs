@@ -3,13 +3,16 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
+using static FlexibleButton; // ButtonType
+
 [RequireComponent(typeof(Button), typeof(Image))]
 [RequireComponent(typeof(AudioSource))]
 [ExecuteInEditMode]
-public class FlexibleUIButton : MonoBehaviour, 
+public class FlexibleUIButton : MonoBehaviour,
     IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     public FlexibleButton skinData;
+    public ButtonType buttonType;
 
     [Header("Events")]
     public UnityEvent onClick;
@@ -28,14 +31,31 @@ public class FlexibleUIButton : MonoBehaviour,
     // Called in editor mode
     public void Repaint()
     {
-        button.transition = skinData.buttonTransition;
         button.targetGraphic = image;
-    
+
         image.sprite = skinData.sprite;
         image.type = Image.Type.Sliced;
 
-        button.spriteState = skinData.spriteState;
-        button.colors = skinData.colorBlock;
+        switch (buttonType)
+        {
+            case ButtonType.Default:
+                button.transition = skinData.defaultButtonTransition;
+                button.spriteState = skinData.defaultSpriteState;
+                button.colors = skinData.defaultColorBlock;
+                break;
+
+            case ButtonType.Confirm:
+                button.transition = skinData.confirmButtonTransition;
+                button.spriteState = skinData.confirmSpriteState;
+                button.colors = skinData.confirmColorBlock;
+                break;
+            
+            case ButtonType.Decline:
+                button.transition = skinData.declineButtonTransition;
+                button.spriteState = skinData.declineSpriteState;
+                button.colors = skinData.declineColorBlock;
+            break;
+        }
     }
 
     private void Update()
