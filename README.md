@@ -459,13 +459,25 @@ public class SceneController : ScriptableSingleton<SceneController>
 
 ---
 
-## Int n Float range variables
+## Int n Float range
 
 #### Conceito
 
 ​	Variáveis semelhantes ao uso da propriedade de  `[Range(n, m)]`, porém variam entre um valor *a, b* que fica entre *n, m*
 
-![a](C:\Users\Nefisto\Documents\Unity projects\MyFramework\imagesToGit~\intRange.PNG)
+![a](https://i.imgur.com/2k734xX.png)
+
+#### Como usar
+
+​	A variável possui duas versões (como visto acima). A primeira (Int Range), permite que se controle o *min* e *max* em tempo de execução. A segunda versão é simplificado e o *min* e *max* são fornecidos por meio do atributo `[MinMaxRange(n, m)]`, a visualização é mais limpa, mas como é um atributo o valor informado precisa ser necessariamente uma constante.
+
+#### Métodos
+
+| Nome              | Descrição                                       |
+| ----------------- | ----------------------------------------------- |
+| float GetRandom() | Valor randômico entre e [mínimo e máximo[ atual |
+
+[to-up](#framework)
 
 ---
 
