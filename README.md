@@ -14,6 +14,7 @@
 | [Audio events](#audio-events)                                |
 | <s>FlexibleUI</s>                                            |
 | [Int n Float range](#int-n-float-range)                      |
+| <s>Drop Table</s>                                            |
 
 | Extra                           |
 | ------------------------------- |

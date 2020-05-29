@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "Simple audio event", menuName = "Audio Events/Simple")]
+[CreateAssetMenu(fileName = "Simple audio event", menuName = "Framework/Audio Events/Simple")]
 public class SimpleAudioEvent : AudioEvent
 {
     public AudioClip clip;
@@ -8,7 +8,7 @@ public class SimpleAudioEvent : AudioEvent
     [MinMaxRange(0, 2)]
     public FloatRange volume;
 
-    [MinMaxRange(0, 2)]
+    [MinMaxRange(0, 1)]
     public FloatRange pitch;
 
     public override void Play(AudioSource source)

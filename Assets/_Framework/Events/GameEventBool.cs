@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "GameEventBool", menuName = "Events/GameEvent(bool)")]
+[CreateAssetMenu(fileName = "GameEventBool", menuName = "Framework/Events/GameEvent(bool)")]
 public class GameEventBool : ScriptableObject
 {
     private List<GameEventListenerBool> eventListeners = 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "RandomAudioEvent", menuName = "Audio Events/Random")]
+[CreateAssetMenu(fileName = "RandomAudioEvent", menuName = "Framework/Audio Events/Random")]
 public class RandomAudioEvent : AudioEvent
 {
     public AudioClip[] clips;

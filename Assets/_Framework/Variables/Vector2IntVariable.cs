@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Vector2Variable", menuName = "Variables/Vector2Int")]
+[CreateAssetMenu(fileName = "Vector2Variable", menuName = "Framework/Variables/Vector2Int")]
 public class Vector2IntVariable : BaseVariable<Vector2Int>
 {
     public int x

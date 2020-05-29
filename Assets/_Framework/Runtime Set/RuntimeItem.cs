@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class RuntimeItem : MonoBehaviour
+﻿public class RuntimeItem : LazyBehavior
 {
     public RuntimeSet runtimeSet;
 

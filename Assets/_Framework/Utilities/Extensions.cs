@@ -9,7 +9,19 @@ public static class Extensions
         => Mathf.Abs(color.r - other.r) < 0.001f &&
            Mathf.Abs(color.g - other.g) < 0.001f &&
            Mathf.Abs(color.b - other.b) < 0.001f;
-           
+
+
+    // Custom editor n propertyDrawer
+    /// <summary>
+    /// Center a checkbox inside a given rect
+    /// </sumary>
+    public static Rect CenterCheckBox(this Rect rect)
+    {
+        var centeredPosition = rect.center - new Vector2(7.5f, 9f);
+
+        return new Rect(centeredPosition, rect.size);
+    }
+
     /// <summary>
     /// Give n percent of given rect
     /// </sumary>

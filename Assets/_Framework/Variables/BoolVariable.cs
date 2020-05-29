@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "BoolVariable", menuName = "Variables/Bool")]
+[CreateAssetMenu(fileName = "BoolVariable", menuName = "Framework/Variables/Bool")]
 public class BoolVariable : BaseVariable<bool>
 {
 }
