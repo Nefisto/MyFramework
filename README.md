@@ -1,8 +1,8 @@
+
+
 # Framework
 
 > Framework para otimizar o fluxo de desenvolvimento quando se usa unity
-
-
 
 | Sumario                                                      |
 | :----------------------------------------------------------- |
@@ -13,12 +13,14 @@
 | <s>Monobehavior singletons</s>                               |
 | [Audio events](#audio-events)                                |
 | <s>FlexibleUI</s>                                            |
+| [Int n Float range](#int-n-float-range)                      |
 
 | Extra                           |
 | ------------------------------- |
 | [Atributos](#atributos)         |
 | <s>Editor</s>                   |
 | [Lazy Behavior](#lazy-behavior) |
+| [Utilities](#utilities)         |
 
 ### Notes:
 
@@ -29,11 +31,23 @@
 
 * [Ryan Hipple - Unite 2017](https://www.youtube.com/watch?v=raQ3iHhE_Kk&t=2713s)
 
-  > Variáveis, runtime sets, game events
+  > Variáveis 
+  >
+  > Runtime sets 
+  >
+  > Game events
 
 * [Richard Fine - Unite 2016](https://www.youtube.com/watch?v=6vmRwLYWNRo) 
 
-  > Reload-proof singletons, audio events
+  > Reload-proof singletons
+  >
+  > Audio events
+  >
+  > Int n Float range
+
+* [Nick Gravelyn - Unity Tool Bag](https://github.com/nickgravelyn/UnityToolbag)
+
+  > Lazy Components
 
 ---
 
@@ -445,6 +459,16 @@ public class SceneController : ScriptableSingleton<SceneController>
 
 ---
 
+## Int n Float range variables
+
+#### Conceito
+
+​	Variáveis semelhantes ao uso da propriedade de  `[Range(n, m)]`, porém variam entre um valor *a, b* que fica entre *n, m*
+
+![a](C:\Users\Nefisto\Documents\Unity projects\MyFramework\imagesToGit~\intRange.PNG)
+
+---
+
 ## Atributos
 
 > Richard Fine - Unite 2016
@@ -467,6 +491,8 @@ public FloatRange volume;
 | ----------- | ------------------------------------------------------------ |
 | GetRandom() | Retorna um valor aleatório entre os especificados no atributo |
 
+[to up](#framework)
+
 ---
 
 ## Lazy Behavior
@@ -485,6 +511,24 @@ public FloatRange volume;
 #### Componentes do framework (necessário descomentar quando importar)
 
 * Pooled Object
+
+[to up](#framework)
+
+---
+
+## Utilities
+
+### 	Extensions:
+
+| Métodos públicos                    | Descrição                                             |
+| ----------------------------------- | ----------------------------------------------------- |
+| color.IsEqualTo(Color other) : Bool | Compara duas cores em RGB (não leva o alpha em conta) |
+
+| Editor extensions                     | Descrição                       |
+| ------------------------------------- | ------------------------------- |
+| rect.ResizeX(Float percent) : Vector2 | Redimensiona o *width* da caixa |
+
+[to up](#framework)
 
 ---
 

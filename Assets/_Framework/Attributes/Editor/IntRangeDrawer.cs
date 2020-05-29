@@ -1,9 +1,8 @@
 using UnityEngine;
-using System.Collections;
 using UnityEditor;
 
-[CustomPropertyDrawer(typeof(FloatRange), true)]
-public class FloatRangeDrawer : PropertyDrawer
+[CustomPropertyDrawer(typeof(IntRange))]
+public class IntRangeDrawer : PropertyDrawer
 {
     private Rect nameRect, minRect, maxRect, currentMinRect, minMaxSliderRect, currentMaxRect;
 
@@ -12,12 +11,12 @@ public class FloatRangeDrawer : PropertyDrawer
     private float _currentMin, _currentMax;
 
     // For change check    
-    protected float _min, _max;
+    protected int _min, _max;
 
-    private bool isDirty;
+    protected bool isDirty;
 
     private int numberOfLines = 2;
-
+    
     public override void OnGUI(Rect rect, SerializedProperty property, GUIContent label)
     {
         label = EditorGUI.BeginProperty(rect, label, property);
@@ -108,8 +107,8 @@ public class FloatRangeDrawer : PropertyDrawer
         currentMinProp = property.FindPropertyRelative("currentMin");
         currentMaxProp = property.FindPropertyRelative("currentMax");
 
-        _min = minProp.floatValue;
-        _max = maxProp.floatValue;
+        _min = minProp.intValue;
+        _max = maxProp.intValue;
 
         #endregion
 
@@ -122,12 +121,14 @@ public class FloatRangeDrawer : PropertyDrawer
         {
             numberOfLines = 1;
 
+            _currentMin = Mathf.RoundToInt(_currentMin);
+            _currentMax = Mathf.RoundToInt(_currentMax);
             EditorGUI.BeginChangeCheck();
-            EditorGUI.MinMaxSlider(minMaxSliderRect, GUIContent.none, ref _currentMin, ref _currentMax, ranges[0].Min, ranges[0].Max);
+            EditorGUI.MinMaxSlider(minMaxSliderRect, GUIContent.none, ref _currentMin, ref _currentMax, (int)ranges[0].Min, (int)ranges[0].Max);
             if (EditorGUI.EndChangeCheck())
             {
-                currentMinProp.floatValue = _currentMin;
-                currentMaxProp.floatValue = _currentMax;
+                currentMinProp.intValue = Mathf.RoundToInt(_currentMin);
+                currentMaxProp.intValue = Mathf.RoundToInt(_currentMax);
             }
         }
         else
@@ -137,8 +138,8 @@ public class FloatRangeDrawer : PropertyDrawer
             EditorGUIUtility.labelWidth = maxRect.width * .4f;
 
             EditorGUI.BeginChangeCheck();
-            var tmpMin = EditorGUI.FloatField(minRect, "Min", minProp.floatValue);
-            var tmpMax = EditorGUI.FloatField(maxRect, "Max", maxProp.floatValue);
+            var tmpMin = EditorGUI.IntField(minRect, "Min", minProp.intValue);
+            var tmpMax = EditorGUI.IntField(maxRect, "Max", maxProp.intValue);
             if (EditorGUI.EndChangeCheck())
             {
                 isDirty = true;
@@ -151,14 +152,14 @@ public class FloatRangeDrawer : PropertyDrawer
 
             EditorGUIUtility.labelWidth = 0;
 
-            _currentMin = currentMinProp.floatValue;
-            _currentMax = currentMaxProp.floatValue;
+            _currentMin = currentMinProp.intValue;
+            _currentMax = currentMaxProp.intValue;
 
             EditorGUI.BeginChangeCheck();
-            EditorGUI.MinMaxSlider(minMaxSliderRect, GUIContent.none, ref _currentMin, ref _currentMax, minProp.floatValue, maxProp.floatValue);
+            EditorGUI.MinMaxSlider(minMaxSliderRect, GUIContent.none, ref _currentMin, ref _currentMax, minProp.intValue, maxProp.intValue);
             if (EditorGUI.EndChangeCheck())
                 ValidadeValues(_currentMin, _currentMax);
-            
+
             Event e = Event.current;
             if ((e.keyCode == KeyCode.KeypadEnter || e.keyCode == KeyCode.Escape || e.keyCode == KeyCode.Tab || e.isMouse)
                 || (isDirty))
@@ -167,14 +168,13 @@ public class FloatRangeDrawer : PropertyDrawer
             }
         }
 
-        GUI.Box(currentMinRect, currentMinProp.floatValue.ToString("F2"));
-        GUI.Box(currentMaxRect, currentMaxProp.floatValue.ToString("F2"));
+        GUI.Box(currentMinRect, currentMinProp.intValue.ToString());
+        GUI.Box(currentMaxRect, currentMaxProp.intValue.ToString());
 
         #endregion
 
         EditorGUI.EndProperty();
     }
-
     protected void ValidadeValues(float currentMin, float currentMax)
     {
         if (_min > _max)
@@ -183,11 +183,11 @@ public class FloatRangeDrawer : PropertyDrawer
         currentMin = Mathf.Clamp(currentMin, _min, currentMax);
         currentMax = Mathf.Clamp(currentMax, currentMin, _max);
 
-        minProp.floatValue = _min;
-        maxProp.floatValue = _max;
+        minProp.intValue = _min;
+        maxProp.intValue = _max;
 
-        this.currentMinProp.floatValue = currentMin;
-        this.currentMaxProp.floatValue = currentMax;
+        this.currentMinProp.intValue = Mathf.RoundToInt(currentMin);
+        this.currentMaxProp.intValue = Mathf.RoundToInt(currentMax);
     }
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)

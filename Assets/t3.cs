@@ -4,5 +4,10 @@ using UnityEngine;
 
 public class t3 : MonoBehaviour
 {
-    public t1 a;
+    public IntRange intRange;
+
+    [Space(10)]
+    
+    [MinMaxRange(0, 10)]
+    public IntRange rangeAttribute;
 }

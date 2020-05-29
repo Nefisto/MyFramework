@@ -10,4 +10,10 @@ public class MinMaxRangeAttribute : Attribute
         Min = min;
         Max = max;
     }
+
+    public MinMaxRangeAttribute(int min, int max)
+    {
+        Min = min;
+        Max = max;
+    }
 }

@@ -281,3 +281,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c13a3cf4bfb3a94080d483c75676402, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  intRange:
+    min: 6
+    max: 14
+    currentMin: 11
+    currentMax: 12
+  rangeAttribute:
+    min: 0
+    max: 0
+    currentMin: 1
+    currentMax: 7
