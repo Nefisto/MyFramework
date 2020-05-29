@@ -14,11 +14,11 @@
 | [Audio events](#audio-events)                                |
 | <s>FlexibleUI</s>                                            |
 
-| Extra                                                |
-| ---------------------------------------------------- |
-| [Atributos](#atributos)                              |
-| <s>Editor</s>                                        |
-| <s>Cached behavior (lazy approach to components)</s> |
+| Extra                           |
+| ------------------------------- |
+| [Atributos](#atributos)         |
+| <s>Editor</s>                   |
+| [Lazy Behavior](#lazy-behavior) |
 
 ### Notes:
 
@@ -466,4 +466,25 @@ public FloatRange volume;
 | Métodos     |                                                              |
 | ----------- | ------------------------------------------------------------ |
 | GetRandom() | Retorna um valor aleatório entre os especificados no atributo |
+
+---
+
+## Lazy Behavior
+
+> Unity toolbag - nickgravelyn
+
+​	Propriedades não efetuam cache, portanto, cada vez que você usa uma propriedade esta fazendo um GetComponent, essa abordagem serve para manter componentes utilizados em cache. Para usar apenas substituía a herança da classe de MonoBehavior para LazyBehavior
+
+#### Componentes do unity
+
+* RigidBody 2D
+* Animator
+* Sprite Renderer
+* Box Collider 2D
+
+#### Componentes do framework (necessário descomentar quando importar)
+
+* Pooled Object
+
+---
 

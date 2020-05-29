@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-public abstract class CachedBehavior : MonoBehaviour
+public abstract class LazyBehavior : MonoBehaviour
 {
     [HideInInspector, NonSerialized]
     private Rigidbody2D _rigidbody2D;
@@ -20,7 +20,7 @@ public abstract class CachedBehavior : MonoBehaviour
     public BoxCollider2D boxCollider2D { get => _boxCollider2D ? _boxCollider2D : (_boxCollider2D = GetComponent<BoxCollider2D>()); }
 
     // Framework components
-    [HideInInspector, NonSerialized]
-    private PooledObject _pooledObject;
-    public PooledObject pooledObject { get => _pooledObject ? _pooledObject : (_pooledObject = GetComponent<PooledObject>()); }
+    // [HideInInspector, NonSerialized]
+    // private PooledObject _pooledObject;
+    // public PooledObject pooledObject { get => _pooledObject ? _pooledObject : (_pooledObject = GetComponent<PooledObject>()); } 
 }
