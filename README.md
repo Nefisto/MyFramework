@@ -4,19 +4,21 @@
 
 
 
-| Sumario                                               |
-| :---------------------------------------------------- |
-| [Arquitetura de variaveis](#arquitetura-de-variáveis) |
-| [Arquitetura de eventos](#arquitetura-de-eventos)     |
-| [Runtime sets](#runtime-sets)                         |
-| [Reload-proof singletons](#reload-proof-singleton)    |
-| [Audio events](#audio-events)                         |
-| <s>FlexibleUI</s>                                     |
+| Sumario                                                      |
+| :----------------------------------------------------------- |
+| [Arquitetura de variaveis](#arquitetura-de-variáveis)        |
+| [Arquitetura de eventos](#arquitetura-de-eventos)            |
+| [Runtime sets](#runtime-sets) (ALTERAÇÕES PARA LAZYCOMPONENTS) |
+| [Reload-proof singletons](#reload-proof-singleton)           |
+| <s>Monobehavior singletons</s>                               |
+| [Audio events](#audio-events)                                |
+| <s>FlexibleUI</s>                                            |
 
-| Extra                   |
-| ----------------------- |
-| [Atributos](#atributos) |
-| <s>Editor</s>           |
+| Extra                                                |
+| ---------------------------------------------------- |
+| [Atributos](#atributos)                              |
+| <s>Editor</s>                                        |
+| <s>Cached behavior (lazy approach to components)</s> |
 
 ### Notes:
 
