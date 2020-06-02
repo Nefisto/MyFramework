@@ -6,7 +6,7 @@ public class DropTableItemDrawer : PropertyDrawer
 {
     private int numberOfLines = 1;
 
-    private SerializedProperty pool;
+    private SerializedProperty prefab;
     private SerializedProperty weight;
     private SerializedProperty percent;
     private SerializedProperty isMultiple;
@@ -69,7 +69,7 @@ public class DropTableItemDrawer : PropertyDrawer
 
         #region Get fields
             
-        pool = property.FindPropertyRelative("pool");
+        prefab = property.FindPropertyRelative("prefab");
         weight = property.FindPropertyRelative("weight");
         percent = property.FindPropertyRelative("percent");
         isMultiple = property.FindPropertyRelative("isMultiple");
@@ -83,7 +83,7 @@ public class DropTableItemDrawer : PropertyDrawer
 
         #region Draw
         
-        EditorGUI.PropertyField(poolRect, pool, GUIContent.none);
+        EditorGUI.PropertyField(poolRect, prefab, GUIContent.none);
 
         EditorGUI.BeginChangeCheck();
             EditorGUI.BeginDisabledGroup(canChangeWeight);

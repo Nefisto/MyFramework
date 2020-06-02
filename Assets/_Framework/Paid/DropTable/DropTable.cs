@@ -1,4 +1,4 @@
-// using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,27 +8,73 @@ using UnityEngine;
 
 // TODO: mudar o label do item para "prefab" ou "poolName" no custom editor
 
-
 public enum DropTableKind
 {
     WithReposition,
     WithoutReposition
 }
 
-[CreateAssetMenu(fileName = "Drop Table (PooledObject)", menuName = "Framework/Drop Table/Default")]
+[CreateAssetMenu(fileName = "Drop Table", menuName = "Framework/Drop Table/Default")]
 public class DropTable : ScriptableObject
 {
     public List<DropTableItem> loot = new List<DropTableItem>();
-    
+
     public DropTableKind sampleKind;
+
+    private int TotalWeight
+    {
+        get => loot.Sum(item => item.weight);
+    }
 
     public bool isEmpty
     {
         get => loot.Count > 0 ? true : false;
     }
 
-    // public abstract (Pool pool, int amount) DropSingle();
+    public List<DropItem> Drop(int nDrops = 1)
+    {
+        List<DropItem> droppedLoot = new List<DropItem>();
 
+        AddUniqueItem(droppedLoot, nDrops);
+        AddGuarantedItems(droppedLoot);
+
+        return droppedLoot;
+    }
+
+    private void AddUniqueItem(List<DropItem> droppedLoot, int nDrop = 1)
+    {
+        List<DropTableItem> possibleDrops = new List<DropTableItem>(loot);
+        possibleDrops.RemoveAll((item) => item.isGuaranted || item.weight == 0 || !item.prefab);
+
+        while (nDrop-- > 0)
+        {
+            int x = Random.Range(1, TotalWeight + 1);
+
+            foreach (var item in possibleDrops)
+            {
+                x -= item.weight;
+
+                if (x <= 0)
+                {
+                    droppedLoot.Add(item);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void AddGuarantedItems(List<DropItem> droppedLoot)
+    {
+        // Get all guaranted items
+        foreach (var item in loot)
+        {
+            // Ever drop this item
+            if (item.isGuaranted)
+                droppedLoot.Add(item);
+        }
+    }
+
+    // TODO: Turn it private
     public void CalculatePercent()
     {
         var totalWeight = 0;

@@ -154,7 +154,7 @@ public class DropTableEditor : Editor
             
             var element = _list.serializedProperty.GetArrayElementAtIndex(lastPos);
             
-            element.FindPropertyRelative("pool").objectReferenceValue = null;
+            element.FindPropertyRelative("prefab").objectReferenceValue = null;
             element.FindPropertyRelative("weight").intValue = default(int);
             element.FindPropertyRelative("percent").floatValue = default(float);
             element.FindPropertyRelative("isMultiple").boolValue = default(bool);

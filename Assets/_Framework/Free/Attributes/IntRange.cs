@@ -15,4 +15,9 @@ public class IntRange
         this.currentMin = currentMin;
         this.currentMax = currentMax;
     }
+
+    public int GetRandom()
+    {
+        return Random.Range(currentMin, currentMax);
+    }
 }
