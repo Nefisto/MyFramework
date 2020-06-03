@@ -2,33 +2,27 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
-// TODO: Custom editor para aparecer a quantia somente quando o bool for true
-// TODO: Criar IntRange
-// TODO: Vincular droptable com pool manager
-
-// TODO: mudar o label do item para "prefab" ou "poolName" no custom editor
-
-public enum DropTableKind
-{
-    WithReposition,
-    WithoutReposition
-}
-
 [CreateAssetMenu(fileName = "Drop Table", menuName = "Framework/Drop Table/Default")]
 public class DropTable : ScriptableObject
 {
-    public List<DropTableItem> loot = new List<DropTableItem>();
+    private enum DropTableKind
+    {
+        WithReposition,
+        WithoutReposition
+    }
 
-    public DropTableKind sampleKind;
+    public List<DropTableItem> table = new List<DropTableItem>();
+
+    // public DropTableKind sampleKind;
 
     private int TotalWeight
     {
-        get => loot.Sum(item => item.weight);
+        get => table.Sum(item => item.weight);
     }
 
     public bool isEmpty
     {
-        get => loot.Count > 0 ? true : false;
+        get => table.Count > 0 ? true : false;
     }
 
     public List<DropItem> Drop(int nDrops = 1)
@@ -43,7 +37,7 @@ public class DropTable : ScriptableObject
 
     private void AddUniqueItem(List<DropItem> droppedLoot, int nDrop = 1)
     {
-        List<DropTableItem> possibleDrops = new List<DropTableItem>(loot);
+        List<DropTableItem> possibleDrops = new List<DropTableItem>(table);
         possibleDrops.RemoveAll((item) => item.isGuaranted || item.weight == 0 || !item.prefab);
 
         while (nDrop-- > 0)
@@ -65,27 +59,25 @@ public class DropTable : ScriptableObject
 
     private void AddGuarantedItems(List<DropItem> droppedLoot)
     {
-        // Get all guaranted items
-        foreach (var item in loot)
+        foreach (var item in table)
         {
-            // Ever drop this item
             if (item.isGuaranted)
                 droppedLoot.Add(item);
         }
     }
 
-    // TODO: Turn it private
-    public void CalculatePercent()
+    // TODO: Learn reflection to turn it private
+    public void UpdatePercent()
     {
         var totalWeight = 0;
 
-        if (loot.Count == 0)
+        if (table.Count == 0)
             return;
 
-        foreach (var item in loot)
+        foreach (var item in table)
             totalWeight += item.weight;
 
-        foreach (var item in loot)
+        foreach (var item in table)
         {
             if (item.weight == 0)
             {
