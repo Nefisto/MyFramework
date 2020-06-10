@@ -22,7 +22,7 @@ public class DropTableEditor : Editor
     private void OnEnable()
     {
         
-        _list = CreateList(serializedObject, serializedObject.FindProperty("table"));
+        _list = CreateList(serializedObject, serializedObject.FindProperty("loot"));
     }
 
     ReorderableList CreateList(SerializedObject obj, SerializedProperty prop)
@@ -175,12 +175,12 @@ public class DropTableEditor : Editor
     {
         serializedObject.Update();
 
-        Target.UpdatePercent();
+        Target.CalculatePercent();
 
         _list.DoLayoutList();
         
         if (GUILayout.Button("Clear list"))
-            Target.table.Clear();
+            Target.loot.Clear();
 
         serializedObject.ApplyModifiedProperties();
     }

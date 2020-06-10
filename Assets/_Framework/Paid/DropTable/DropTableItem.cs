@@ -21,8 +21,8 @@ public class DropTableItem
 
     public bool isGuaranted;
 
-    [SerializeField, HideInInspector]
-    private int lastWeight;
+    // Cach
+    public int lastWeight;
 
     public static implicit operator DropItem(DropTableItem dropTableItem)
         => new DropItem(){prefab = dropTableItem.prefab, 

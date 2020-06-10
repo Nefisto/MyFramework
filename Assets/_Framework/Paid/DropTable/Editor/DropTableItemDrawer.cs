@@ -77,10 +77,9 @@ public class DropTableItemDrawer : PropertyDrawer
         isGuaranted = property.FindPropertyRelative("isGuaranted");
         lastWeight = property.FindPropertyRelative("lastWeight");
 
-        canChangeWeight = isGuaranted.boolValue;
-
         #endregion
         
+        canChangeWeight = isGuaranted.boolValue;
 
         #region Draw
         
@@ -122,7 +121,6 @@ public class DropTableItemDrawer : PropertyDrawer
             EditorGUI.PropertyField(isGuarantedRect.CenterCheckBox(), isGuaranted, GUIContent.none);
         if (EditorGUI.EndChangeCheck())
         {
-            Debug.Log("here");
             if (isGuaranted.boolValue)
             {
                 lastWeight.intValue = weight.intValue;
