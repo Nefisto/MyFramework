@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 
-[CustomPropertyDrawer(typeof(IntReference))]
-public class IntReferenceDrawer : BaseReferenceDrawer
+namespace Unidream
 {
-    
+    [CustomPropertyDrawer(typeof(IntReference))]
+    public class IntReferenceDrawer : BaseReferenceDrawer { }
 }

@@ -1,7 +1,10 @@
 using UnityEditor;
 
-[CustomPropertyDrawer(typeof(BoolReference))]
-public class BoolReferenceDrawer : BaseReferenceDrawer
-{ 
+namespace Unidream
+{
+    [CustomPropertyDrawer(typeof(BoolReference))]
+    public class BoolReferenceDrawer : BaseReferenceDrawer
+    {
 
+    }
 }

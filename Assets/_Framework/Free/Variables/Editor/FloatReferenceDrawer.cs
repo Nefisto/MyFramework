@@ -1,7 +1,7 @@
 using UnityEditor;
 
-[CustomPropertyDrawer(typeof(FloatReference))]
-public class FloatReferenceDrawer : BaseReferenceDrawer
+namespace Unidream
 {
-    
+    [CustomPropertyDrawer(typeof(FloatReference))]
+    public class FloatReferenceDrawer : BaseReferenceDrawer { }
 }

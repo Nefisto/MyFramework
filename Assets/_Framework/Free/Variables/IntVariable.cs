@@ -1,10 +1,11 @@
-﻿#pragma warning disable 0414
+﻿using UnityEngine;
 
-using UnityEngine;
-
-[CreateAssetMenu(fileName = "IntVariable", menuName = "Framework/Variables/Int")]
-public class IntVariable : BaseVariable<int>
+namespace Unidream
 {
-    public void ApplyChange(int value)
-        => Value += value;
+    [CreateAssetMenu(fileName = "IntVariable", menuName = "Framework/Variables/Int")]
+    public class IntVariable : BaseVariable<int>
+    {
+        public void ApplyChange(int value)
+            => Value += value;
+    }
 }

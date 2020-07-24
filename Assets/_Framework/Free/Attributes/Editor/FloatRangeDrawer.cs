@@ -20,7 +20,7 @@ public class FloatRangeDrawer : PropertyDrawer
 
     public override void OnGUI(Rect rect, SerializedProperty property, GUIContent label)
     {
-        label = EditorGUI.BeginProperty(rect, label, property);
+        // label = EditorGUI.BeginProperty(rect, label, property);
 
         #region Control variables
 
@@ -172,7 +172,7 @@ public class FloatRangeDrawer : PropertyDrawer
 
         #endregion
 
-        EditorGUI.EndProperty();
+        // EditorGUI.EndProperty();
     }
 
     protected void ValidadeValues(float currentMin, float currentMax)

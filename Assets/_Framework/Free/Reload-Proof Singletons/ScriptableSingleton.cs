@@ -27,3 +27,9 @@ public abstract class ScriptableSingleton<T> : ScriptableObject
         }
     }
 }
+
+[CreateAssetMenu("Asset manager", "Manager/Assets")]
+public class AssetManager : ScriptableObject<AssetManager>
+{
+    public Sprite spriteA;
+}

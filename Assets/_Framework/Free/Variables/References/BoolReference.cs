@@ -1,33 +1,34 @@
-using System;
-
-[Serializable]
-public class BoolReference
+namespace Unidream
 {
-    public bool UseConstant = true;
-    public bool ConstantValue;
-    public BoolVariable Variable;
-
-    public BoolReference()
-    { }
-
-    public BoolReference(bool value)
+    [System.Serializable]
+    public class BoolReference
     {
-        UseConstant = true;
-        ConstantValue = value;
-    }
+        public bool UseConstant = true;
+        public bool ConstantValue;
+        public BoolVariable Variable;
 
-    public bool Value
-    {
-        get => UseConstant ? ConstantValue : Variable.Value; 
-        set
+        public BoolReference()
+        { }
+
+        public BoolReference(bool value)
         {
-            if (UseConstant)
-                ConstantValue = value;
-            else
-                Variable.Value = value;
+            UseConstant = true;
+            ConstantValue = value;
         }
-    }
 
-    public static implicit operator bool(BoolReference reference)
-        => reference.Value;
+        public bool Value
+        {
+            get => UseConstant ? ConstantValue : Variable.Value;
+            set
+            {
+                if (UseConstant)
+                    ConstantValue = value;
+                else
+                    Variable.Value = value;
+            }
+        }
+
+        public static implicit operator bool(BoolReference reference)
+            => reference.Value;
+    }
 }

@@ -1,5 +1,6 @@
-using UnityEngine;
 using System;
+using UnityEngine;
+using UnityEngine.UI;
 
 public abstract partial class LazyBehavior : MonoBehaviour
 {
@@ -18,4 +19,8 @@ public abstract partial class LazyBehavior : MonoBehaviour
     [HideInInspector, NonSerialized]
     private BoxCollider2D _boxCollider2D;
     public BoxCollider2D boxCollider2D { get => _boxCollider2D ? _boxCollider2D : (_boxCollider2D = GetComponent<BoxCollider2D>()); }
+
+    [HideInInspector, NonSerialized]
+    private Image _image;
+    public Image image { get => _image ? _image : (_image = GetComponent<Image>()); }
 }

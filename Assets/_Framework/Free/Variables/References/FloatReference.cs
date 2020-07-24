@@ -1,33 +1,34 @@
-using System;
-
-[Serializable]
-public class FloatReference
+namespace Unidream
 {
-    public bool UseConstant = true;
-    public float ConstantValue;
-    public FloatVariable Variable;
-
-    public FloatReference()
-    { }
-
-    public FloatReference(float value)
+    [System.Serializable]
+    public class FloatReference
     {
-        UseConstant = true;
-        ConstantValue = value;
-    }
+        public bool UseConstant = true;
+        public float ConstantValue;
+        public FloatVariable Variable;
 
-    public float Value
-    {
-        get => UseConstant ? ConstantValue : Variable.Value;
-        set
+        public FloatReference()
+        { }
+
+        public FloatReference(float value)
         {
-            if (UseConstant)
-                ConstantValue = value;
-            else
-                Variable.Value = value;
+            UseConstant = true;
+            ConstantValue = value;
         }
-    }
 
-    public static implicit operator float(FloatReference reference)
-        => reference.Value;
+        public float Value
+        {
+            get => UseConstant ? ConstantValue : Variable.Value;
+            set
+            {
+                if (UseConstant)
+                    ConstantValue = value;
+                else
+                    Variable.Value = value;
+            }
+        }
+
+        public static implicit operator float(FloatReference reference)
+            => reference.Value;
+    }
 }

@@ -1,47 +1,48 @@
-﻿using System;
-
-[Serializable]
-public class IntReference
+﻿namespace Unidream
 {
-    public bool UseConstant = true;
-    public int ConstantValue;
-    public IntVariable Variable;
-
-    public IntReference()
-    { }
-
-    public IntReference(int value)
+    [System.Serializable]
+    public class IntReference
     {
-        UseConstant = true;
-        ConstantValue = value;
-    }
+        public bool UseConstant = true;
+        public int ConstantValue;
+        public IntVariable Variable;
 
-    public int Value
-    {
-        get => UseConstant ? ConstantValue : Variable.Value; 
-        set
+        public IntReference()
+        { }
+
+        public IntReference(int value)
         {
-            if (UseConstant)
-                ConstantValue = value;
-            else
-                Variable.Value = value;
+            UseConstant = true;
+            ConstantValue = value;
         }
-    }
 
-    public static implicit operator int(IntReference reference)
-        => reference.Value;
-    
-    public static IntReference operator --(IntReference reference)
-    {
-        reference.Value--;
+        public int Value
+        {
+            get => UseConstant ? ConstantValue : Variable.Value;
+            set
+            {
+                if (UseConstant)
+                    ConstantValue = value;
+                else
+                    Variable.Value = value;
+            }
+        }
 
-        return reference;
-    }
+        public static implicit operator int(IntReference reference)
+            => reference.Value;
 
-    public static IntReference operator ++(IntReference reference)
-    {
-        reference.Value++;
+        public static IntReference operator --(IntReference reference)
+        {
+            reference.Value--;
 
-        return reference;
+            return reference;
+        }
+
+        public static IntReference operator ++(IntReference reference)
+        {
+            reference.Value++;
+
+            return reference;
+        }
     }
 }
