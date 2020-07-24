@@ -1,0 +1,670 @@
+{
+	"Javadoc comment =D": {
+		"prefix": "summary",
+		"body": [
+			"/// <summary>",
+			"/// $1",
+			"/// </sumary>",
+		],
+		"description": "Javadoc comments"
+	},
+
+	"Disable warning":{
+		"prefix": "disable-warning",
+		"body": "#pragma warning disable $0"
+	},
+
+	"Restore warning":{
+		"prefix": "restore-warning",
+		"body": "#pragma warning restore $0"
+	},
+
+	// UNITY snippets
+	// Classes template
+	"Unity MonoBehaviour": 
+	{
+		"prefix": "MonoBehaviour",
+		"description": "Unity MonoBehaviour class template.",
+		"body": 
+		[
+			"using UnityEngine;",
+			"",
+			"public class ${TM_FILENAME_BASE} : MonoBehaviour",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+
+	"Partial MonoBehavior": 
+	{
+		"prefix": "Partial",
+		"description": "C# partial MonoBehaviour class template.",
+		"body": 
+		[
+			"using UnityEngine;",
+			"",
+			"public partial class ${TM_FILENAME_BASE/_(.*)//} : MonoBehaviour",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+
+	"Unity ScriptableObject": 
+	{
+		"prefix": "ScriptableObject",
+		"description": "Unity ScriptableObject class template.",
+		"body": 
+		[
+			"using UnityEngine;",
+			"",
+			"[CreateAssetMenu(fileName = \"${1:${TM_FILENAME_BASE}}\", menuName = \"${2:${TM_FILEPATH/.*\\\\(.*)\\\\Assets\\\\.*/${1}/}/${TM_FILENAME_BASE}}\", order = ${3:0})]",
+			"public class ${TM_FILENAME_BASE} : ScriptableObject",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+
+	"Unity Editor": 
+	{
+		"prefix": "Editor",
+		"description": "Unity Editor class template.",
+		"body": 
+		[
+			"using UnityEngine;",
+			"using UnityEditor;",
+			"",
+			"[CustomEditor(typeof(${1:${TM_FILENAME_BASE/(.*)Editor/${1}/}}))]",
+			"public class ${TM_FILENAME_BASE} : Editor",
+			"{",
+			"\tpublic ${1:${TM_FILENAME_BASE/(.*)Editor/${1}/}} _target",
+			"\t{",
+			"\t\tget => (${1:${TM_FILENAME_BASE/(.*)Editor/${1}/}})target;",
+			"\t}",
+			"\t",
+			"\tpublic override void OnInspectorGUI()",
+			"\t{",
+			"\t\tbase.OnInspectorGUI();",
+			"\t\t$0",
+			"\t}",
+			"}"
+		]
+	},
+
+	"Unity Editor with Reorderable List": 
+	{
+		"prefix": "EditorWithReorderableList",
+		"description": "Unity Editor class template with a ReorderableList.",
+		"body": 
+		[
+			"using UnityEngine;",
+			"using UnityEditor;",
+			"using UnityEditorInternal;",
+			"",
+			"[CustomEditor(typeof(${1:${TM_FILENAME_BASE/(.*)Editor/${1}/}}))]",
+			"public class ${TM_FILENAME_BASE} : Editor",
+			"{",
+			"\tprivate SerializedProperty _property;",
+			"\tprivate ReorderableList _list;",
+			"",
+			"\tprivate void OnEnable()",
+			"\t{",
+			"\t\t_property = serializedObject.FindProperty(\"${2}\");",
+			"\t\t_list = new ReorderableList(serializedObject, _property, true, true, true, true)",
+			"\t\t{",
+			"\t\t\tdrawHeaderCallback = DrawListHeader,",
+			"\t\t\tdrawElementCallback = DrawListElement",
+			"\t\t};",
+			"\t}",
+			"",
+			"\tprivate void DrawListHeader(Rect rect)",
+			"\t{",
+			"\t\tGUI.Label(rect, \"${2}\");",
+			"\t}",
+			"",
+			"\tprivate void DrawListElement(Rect rect, int index, bool isActive, bool isFocused)",
+			"\t{",
+			"\t\tvar item = _property.GetArrayElementAtIndex(index);",
+			"\t\tEditorGUI.PropertyField(rect, item);",
+			"\t\t$0",
+			"\t}",
+			"",
+			"\tpublic override void OnInspectorGUI()",
+			"\t{",
+			"\t\tserializedObject.Update();",
+			"\t\tEditorGUILayout.Space();",
+			"\t\t_list.DoLayoutList();",
+			"\t\tserializedObject.ApplyModifiedProperties();",
+			"\t}",
+			"}"
+		]
+	},
+	
+	"Unity PropertyDrawer": 
+	{
+		"prefix": "PropertyDrawer",
+		"description": "Unity PropertyDrawer class template.",
+		"body": 
+		[
+			"using UnityEngine;",
+			"using UnityEditor;",
+			"",
+			"[CustomPropertyDrawer(typeof(${1:${TM_FILENAME_BASE/(.*)Drawer/${1}/}}))]",
+			"public class ${TM_FILENAME_BASE}: PropertyDrawer",
+			"{",
+			"\tpublic override void OnGUI(Rect rect, SerializedProperty property, GUIContent label)",
+			"\t{",
+			"\t\t#region Control",
+			"",
+			"\t\tvar currentPosition = rect.position;",
+			"",
+			"\t\tvar oneLineRect = new Rect(rect.position, new Vector2(rect.width, EditorGUIUtility.singleLineHeight));",
+			"\t\tvar twoHalfPercentSpaceWidth = oneLineRect.ResizeX(.025f).x;",
+			"",
+			"\t\t#endregion",
+			"\t\t",
+			"\t\t$0",
+			"\t}",
+			"",
+			"\tpublic override float GetPropertyHeight(SerializedProperty property, GUIContent label)",
+			"\t{",
+			"\t\treturn base.GetPropertyHeight(property, label);",
+			"\t}",
+			"}"
+		]
+	},
+
+	"Unity PropertyAttribute": 
+	{
+		"prefix": "PropertyAttribute",
+		"description": "Unity PropertyDrawer for a attribute class.",
+		"body": 
+		[
+			"using UnityEngine;",
+			"using UnityEditor;",
+			"",
+			"public class ${TM_FILENAME_BASE}: PropertyAttribute",
+			"{",
+			"}"
+		]
+	},
+
+	"Unity DecoratorDrawer": {
+		"prefix": "DecoratorDrawer",
+		"description": "Unity DecoratorDrawer for a attribute class.",
+		"body": 
+		[
+			"using UnityEngine;",
+			"using UnityEditor;",
+			"",
+			"[CustomPropertyDrawer(typeof(${1:${TM_FILENAME_BASE/(.*)Drawer/${1}/}}Attribute))]",
+			"public class ${TM_FILENAME_BASE}: DecoratorDrawer",
+			"{",
+			"\t${TM_FILENAME_BASE/(.*)Drawer/${1}/}Attribute ${TM_FILENAME_BASE/(.)/${1:/downcase}/}",
+			"\t{",
+			"\t\tget => (${TM_FILENAME_BASE/(.*)Drawer/${1}/}Attribute)attribute;",
+			"\t}",
+			"",
+			"\tpublic override void OnGUI(Rect position)",
+			"\t{",
+			"\t\t$0",
+			"\t}",
+			"",
+			"\tpublic override float GetHeight()",
+			"\t{",
+			"\t\treturn base.GetHeight();",
+			"\t}",
+			"}"
+		]
+	},
+	
+	"Unity EditorWindow": 
+	{
+		"prefix": "EditorWindow",
+		"description": "Unity EditorWindow class template.",
+		"body": 
+		[
+			"using UnityEngine;",
+			"using UnityEditor;",
+			"",
+			"public class ${TM_FILENAME_BASE} : EditorWindow",
+			"{",
+			"",
+			"\t[MenuItem(\"${1:${TM_FILEPATH/.*\\\\(.*)\\\\Assets\\\\.*/${1}/}/${TM_FILENAME_BASE/(.*)Editor/${1}/}}\")]",
+			"\tprivate static void ShowWindow()",
+			"\t{",
+			"\t\tvar window = GetWindow<${TM_FILENAME_BASE}>();",
+			"\t\twindow.titleContent = new GUIContent(\"${2:${TM_FILENAME_BASE/(.*)Editor/${1}/}}\");",
+			"\t\twindow.Show();",
+			"\t}",
+			"",
+			"\tprivate void OnGUI()",
+			"\t{",
+			"\t\t$0",
+			"\t}",
+			"}"
+		]
+	},
+
+	"Unity ScriptableWizard": 
+	{
+		"prefix": "ScriptableWizard",
+		"description": "Unity ScriptableWizard class template.",
+		"body": 
+		[
+			"using UnityEngine;",
+			"using UnityEditor;",
+			"",
+			"public class ${TM_FILENAME_BASE}: ScriptableWizard",
+			"{",
+			"",
+			"\t[MenuItem(\"${1:${TM_FILEPATH/.*\\\\(.*)\\\\Assets\\\\.*/${1}/}/${TM_FILENAME_BASE/(.*)Wizard/${1}/}}\")]",
+			"\tprivate static void MenuEntryCall()",
+			"\t{",
+			"\t\tDisplayWizard<${TM_FILENAME_BASE}>(\"${2:Title}\");",
+			"\t}",
+			"",
+			"\tprivate void OnWizardCreate()",
+			"\t{",
+			"\t\t$0",
+			"\t}",
+			"}"
+		]
+	},
+
+	"Unity Asset postprocessor":
+	{
+		"prefix": "AssetPostprocessor",
+		"description": "Hook to import pipeline",
+		"body":
+		[
+			"using UnityEngine;",
+			"using UnityEditor;",
+			"",
+			"public class ${TM_FILENAME_BASE}: AssetPostprocessor",
+			"{",
+			"\tvoid OnPostprocessTexture(Texture2D texture)",
+			"\t{",
+			"\t\tif (assetPath.Contains(\"${1:dir}\"))",
+			"\t\t{",
+			"\t\t\t$0",
+			"\t\t}",
+			"\t}",
+			"}"
+		]
+	},
+
+	"MonoBehaviour Awake": {
+		"prefix": "Awake()",
+		"description": "Awake is called when the script instance is being loaded.",
+		"body": [
+			"private void Awake()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour FixedUpdate": {
+		"prefix": "FixedUpdate()",
+		"description": "This function is called every fixed framerate frame, if the MonoBehaviour is enabled.",
+		"body": [
+			"private void FixedUpdate()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour LateUpdate": {
+		"prefix": "LateUpdate()",
+		"description": "LateUpdate is called every frame, if the Behaviour is enabled. It is called after all Update functions have been called.",
+		"body": [
+			"private void LateUpdate()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+
+	"MonoBehaviour OnCollisionEnter": 
+	{
+		"prefix": "OnCollisionEnter(Collision)",
+		"description": "OnCollisionEnter is called when this collider/rigidbody has begun\n touching another rigidbody/collider.",
+		"body": 
+		[
+			"private void OnCollisionEnter(Collision other)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+
+	"MonoBehaviour OnCollisionEnter2D": 
+	{
+		"prefix": "OnCollisionEnter2D(Collision2D)",
+		"description": "Sent when an incoming collider makes contact with this object's collider (2D physics only).",
+		"body": 
+		[
+			"private void OnCollisionEnter2D(Collision2D other)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+
+	"MonoBehaviour OnCollisionExit": 
+	{
+		"prefix": "OnCollisionExit(Collision)",
+		"description": "OnCollisionExit is called when this collider/rigidbody has stopped touching another rigidbody/collider.",
+		"body": 
+		[
+			"private void OnCollisionExit(Collision other)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+
+	"MonoBehaviour OnCollisionExit2D": 
+	{
+		"prefix": "OnCollisionExit2D(Collision2D)",
+		"description": "Sent when a collider on another object stops touching this object's collider (2D physics only).",
+		"body": 
+		[
+			"private void OnCollisionExit2D(Collision2D other)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+
+	"MonoBehaviour OnCollisionStay": 
+	{
+		"prefix": "OnCollisionStay(Collision)",
+		"description": "OnCollisionStay is called once per frame for every collider/rigidbody that is touching rigidbody/collider.",
+		"body": 
+		[
+			"private void OnCollisionStay(Collision other)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+
+	"MonoBehaviour OnCollisionStay2D": 
+	{
+		"prefix": "OnCollisionStay2D(Collision2D)",
+		"description": "Sent each frame where a collider on another object is touching this object's collider (2D physics only).",
+		"body": 
+		[
+			"private void OnCollisionStay2D(Collision2D other)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+
+	"MonoBehaviour OnDrawGizmos": 
+	{
+		"prefix": "OnDrawGizmos()",
+		"description": "Callback to draw gizmos that are pickable and always drawn.",
+		"body": 
+		[
+			"private void OnDrawGizmos()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+
+	"MonoBehaviour OnDrawGizmosSelected": 
+	{
+		"prefix": "OnDrawGizmosSelected()",
+		"description": "Callback to draw gizmos only if the object is selected.",
+		"body": 
+		[
+			"private void OnDrawGizmosSelected()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+
+	"MonoBehaviour OnEnable": 
+	{
+		"prefix": "OnEnable()",
+		"description": "This function is called when the object becomes enabled and active.",
+		"body": 
+		[
+			"private void OnEnable()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	
+	"MonoBehaviour OnDisable": 
+	{
+		"prefix": "OnDisable()",
+		"description": "This function is called when the behaviour becomes disabled or inactive.",
+		"body": 
+		[
+			"private void OnDisable()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+
+	"MonoBehaviour OnTriggerEnter": 
+	{
+		"prefix": "OnTriggerEnter(Collider)",
+		"description": "OnTriggerEnter is called when the Collider other enters the trigger.",
+		"body": 
+		[
+			"private void OnTriggerEnter(Collider other)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+
+	"MonoBehaviour OnTriggerEnter2D": 
+	{
+		"prefix": "OnTriggerEnter2D(Collider2D)",
+		"description": "Sent when another object enters a trigger collider attached to this object (2D physics only).",
+		"body": 
+		[
+			"private void OnTriggerEnter2D(Collider2D other)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnTriggerExit": 
+	{
+		"prefix": "OnTriggerExit(Collider)",
+		"description": "OnTriggerExit is called when the Collider other has stopped touching the trigger.",
+		"body": 
+		[
+			"private void OnTriggerExit(Collider other)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+
+	"MonoBehaviour OnTriggerExit2D": 
+	{
+		"prefix": "OnTriggerExit2D(Collider2D)",
+		"description": "Sent when another object leaves a trigger collider attached to this object (2D physics only).",
+		"body": 
+		[
+			"private void OnTriggerExit2D(Collider2D other)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+
+	"MonoBehaviour OnTriggerStay": 
+	{
+		"prefix": "OnTriggerStay(Collider)",
+		"description": "OnTriggerStay is called once per frame for every Collider other that is touching the trigger.",
+		"body": 
+		[
+			"private void OnTriggerStay(Collider other)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+
+	"MonoBehaviour OnTriggerStay2D": 
+	{
+		"prefix": "OnTriggerStay2D(Collider2D)",
+		"description": "Sent each frame where another object is within a trigger collider attached to this object (2D physics only).",
+		"body": 
+		[
+			"private void OnTriggerStay2D(Collider2D other)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+
+	"MonoBehaviour Reset": 
+	{
+		"prefix": "Reset()",
+		"description": "Reset is called when the user hits the Reset button in the Inspector's context menu or when adding the component the first time.",
+		"body": 
+		[
+			"private void Reset()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+
+	"MonoBehaviour Start": 
+	{
+		"prefix": "Start()",
+		"description": "Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.",
+		"body": 
+		[
+			"private void Start()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+
+	"MonoBehaviour Update": 
+	{
+		"prefix": "Update()",
+		"description": "Update is called every frame, if the MonoBehaviour is enabled.",
+		"body": 
+		[
+			"private void Update()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+
+	
+
+	"Begin horizontal":
+	{
+		"prefix": "BeginHorizontal",
+		"description": "Create an horizontal layour in editor",
+		"body":
+		[
+			"EditorGUILayout.BeginHorizontal();",
+			"",
+			"\t$0",
+			"",
+			"EditorGUILayout.EndHorizontal();",
+		]
+	},
+	"Begin Vertical":
+	{
+		"prefix": "BeginVertical",
+		"description": "Create an Vertical layour in editor",
+		"body":
+		[
+			"EditorGUILayout.BeginVertical();",
+			"",
+			"\t$0",
+			"",
+			"EditorGUILayout.EndVertical();",
+		]
+	},
+
+	"Debug Log": 
+	{
+		"prefix": "Log",
+		"description": "Logs message to the Unity Console.",
+		"body": "Debug.Log($0);"
+	},
+	"Debug Log Error": 
+	{
+		"prefix": "LogError",
+		"description": "A variant of Debug.Log that logs an error message to the console.",
+		"body": "Debug.LogError($0);"
+	},
+	"Debug Log Warning": 
+	{
+		"prefix": "LogWarning",
+		"description": "A variant of Debug.Log that logs a warning message to the console.",
+		"body": "Debug.LogWarning($0);"
+	},
+	"Debug Log Exception": 
+	{
+		"prefix": "LogException",
+		"description": "A variant of Debug.Log that logs an error message from an exception to the console.",
+		"body": "Debug.LogException($0);"
+	},
+	"Debug LogFormat": 
+	{
+		"prefix": "LogFormat",
+		"description": "Logs a formatted message to the Unity Console.",
+		"body": "Debug.LogFormat($0);"
+	},
+	"Debug LogErrorFormat": 
+	{
+		"prefix": "LogErrorFormat",
+		"description": "Logs a formatted error message to the Unity console.",
+		"body": "Debug.LogErrorFormat($0);"
+	},
+	"Debug LogWarningFormat":
+	{
+		"prefix": "LogWarningFormat",
+		"description": "Logs a formatted warning message to the Unity Console.",
+		"body": "Debug.LogWarningFormat($0);"
+	},
+	"General class": 
+	{
+		"prefix": "class",
+		"description": "Creates a normal class.",
+		"body": 
+		[
+			"public class ${TM_FILENAME_BASE}",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"General interface": 
+	{
+		"prefix": "interface",
+		"description": "Creates a normal interface.",
+		"body": [
+			"public interface ${TM_FILENAME_BASE}",
+			"{",
+			"\t$0",
+			"}"
+		]
+	}
+}
