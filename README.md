@@ -355,7 +355,6 @@ public class RuntimeItem : MonoBehaviour
 ## Reload-proof Singleton
 
 > Richard Fine - Unite 2016
->
 
 #### Conceito 
 
@@ -432,7 +431,7 @@ public class SceneController : ScriptableSingleton<SceneController>
 #### Como usar
 
 1. Crie e configure um novo SO do evento de áudio desejado 
-   	(botão direito -> Áudio events)
+   (botão direito -> Áudio events)
 
 2. Na classe responsável por executar o áudio crie uma referencia para a classe base e chame seu método Play() pelo código OU **pelo *inspector* por meio de eventos**
 
